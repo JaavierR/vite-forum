@@ -1,14 +1,11 @@
 <template>
   <div class="container">
-    <home />
+    <router-view />
   </div>
 </template>
 
 <script>
-import Home from '@/views/Home.vue'
-
 export default {
-  components: { Home },
   setup() {},
 }
 </script>
