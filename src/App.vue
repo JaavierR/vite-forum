@@ -1,6 +1,7 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <Home />
+  <div class="container">
+    <home />
+  </div>
 </template>
 
 <script>
@@ -11,3 +12,7 @@ export default {
   setup() {},
 }
 </script>
+
+<style>
+@import 'assets/style.css';
+</style>
