@@ -1,6 +1,6 @@
 <template>
   <div class="col-large push-top">
-    <h1>{{ thread.title }}</h1>
+    <h1 class="my-4 text-3xl font-medium">{{ thread.title }}</h1>
     <div class="post-list"></div>
     <div v-for="postId in thread.posts" :key="postId" class="post">
       <div class="user-info">
