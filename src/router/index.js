@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Views
 import Home from '@/views/Home.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
+import NotFound from '@/views/NotFound.vue'
 
 const routes = [
   {
@@ -15,6 +16,11 @@ const routes = [
     name: 'ThreadShow',
     component: ThreadShow,
     props: true,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
   },
 ]
 
