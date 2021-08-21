@@ -26,22 +26,22 @@ export default {
   },
   setup(props) {
     const { id } = toRefs(props)
-    const { threads, posts, users } = toRefs(reactive(sourceData))
+    const { threads, posts, users } = reactive(sourceData) // Use reactive instead of ref for objects
 
     const thread = computed(
-      () => threads.value.find((thread) => thread.id === id.value) // Also available under route.params.id
+      () => threads.find((thread) => thread.id === id.value) // Also available under route.params.id
     )
 
     const threadPosts = computed(() =>
-      posts.value.filter((post) => post.threadId === id.value)
+      posts.filter((post) => post.threadId === id.value)
     )
 
     const postById = (postId) => {
-      return posts.value.find((p) => p.id === postId)
+      return posts.find((p) => p.id === postId)
     }
 
     const userById = (userId) => {
-      return users.value.find((u) => u.id === userId)
+      return users.find((u) => u.id === userId)
     }
 
     const addPost = (eventData) => {
@@ -49,7 +49,7 @@ export default {
         ...eventData.post,
         threadId: id.value,
       }
-      posts.value.push(post)
+      posts.push(post)
       thread.value.posts.push(post.id)
     }
 
