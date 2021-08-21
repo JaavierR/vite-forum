@@ -4,6 +4,7 @@ import sourceData from '@/data.json'
 
 // Views
 import Home from '@/views/Home.vue'
+import Category from '@/views/Category.vue'
 import Forum from '@/views/Forum.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
 import NotFound from '@/views/NotFound.vue'
@@ -13,6 +14,12 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/category/:id',
+    name: 'Category',
+    component: Category,
+    props: true,
   },
   {
     path: '/forum/:id',
