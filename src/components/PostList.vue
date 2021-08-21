@@ -1,4 +1,5 @@
 <template>
+  <app-test />
   <div class="post-list">
     <div v-for="post in posts" :key="post.id" class="post">
       <div class="user-info">

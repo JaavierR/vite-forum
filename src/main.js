@@ -6,7 +6,7 @@ import '@/index.css'
 const forumApp = createApp(App)
 forumApp.use(router)
 
-const requireComponent = import.meta.globEager('./components/*.vue')
+const requireComponent = import.meta.globEager('./components/App*.vue')
 
 Object.entries(requireComponent).forEach(([path, definition]) => {
   // Get name of component, based on filename
