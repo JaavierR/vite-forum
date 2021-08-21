@@ -9,6 +9,7 @@
     "format": "prettier .  --write"
   },
   "dependencies": {
+    "dayjs": "^1.10.6",
     "vue": "^3.2.4",
     "vue-router": "4"
   },
