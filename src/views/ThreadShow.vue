@@ -1,36 +1,7 @@
 <template>
   <div class="col-large push-top">
     <h1 class="my-4 text-3xl font-medium">{{ thread.title }}</h1>
-    <div class="post-list"></div>
-    <div v-for="postId in thread.posts" :key="postId" class="post">
-      <div class="user-info">
-        <a href="#" class="user-name">
-          {{ userById(postById(postId).userId).name }}
-        </a>
-
-        <a href="#">
-          <img
-            :src="userById(postById(postId).userId).avatar"
-            alt=""
-            class="avatar-large"
-          />
-        </a>
-
-        <p class="desktop-only text-small">107 posts</p>
-      </div>
-
-      <div class="post-content">
-        <div>
-          <p>
-            {{ postById(postId).text }}
-          </p>
-        </div>
-      </div>
-
-      <div class="post-date text-faded">
-        {{ postById(postId).publishedAt }}
-      </div>
-    </div>
+    <post-list :posts="threadPosts" />
   </div>
 </template>
 
@@ -38,7 +9,12 @@
 import { computed, toRefs } from 'vue'
 import sourceData from '@/data.json'
 
+import PostList from '@/components/PostList.vue'
+
 export default {
+  components: {
+    PostList,
+  },
   props: {
     id: {
       type: String,
@@ -53,6 +29,10 @@ export default {
       () => threads.find((thread) => thread.id === id.value) // Also available under route.params.id
     )
 
+    const threadPosts = computed(() =>
+      posts.filter((post) => post.threadId === id.value)
+    )
+
     const postById = (postId) => {
       return posts.find((p) => p.id === postId)
     }
@@ -63,6 +43,7 @@ export default {
 
     return {
       thread,
+      threadPosts,
 
       postById,
       userById,
