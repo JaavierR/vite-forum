@@ -6,6 +6,7 @@ import Home from '@/views/Home.vue'
 import Category from '@/views/Category.vue'
 import Forum from '@/views/Forum.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
+import Profile from '@/views/Profile.vue'
 import NotFound from '@/views/NotFound.vue'
 
 const routes = [
@@ -51,6 +52,11 @@ const routes = [
       }
       // if does not exist redirect to not found
     },
+  },
+  {
+    path: '/me',
+    name: 'Profile',
+    component: Profile,
   },
   {
     path: '/:pathMatch(.*)*',

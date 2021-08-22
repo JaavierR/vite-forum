@@ -13,7 +13,7 @@
     <nav class="navbar">
       <ul>
         <li class="navbar-user">
-          <a href="#">
+          <router-link :to="{ name: 'Profile' }">
             <img
               class="avatar-small"
               :src="authUser.avatar"
@@ -27,7 +27,7 @@
                 alt=""
               />
             </span>
-          </a>
+          </router-link>
 
           <div id="user-dropdown">
             <div class="triangle-drop"></div>
