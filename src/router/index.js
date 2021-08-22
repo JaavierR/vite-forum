@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-import sourceData from '@/data.json'
+import store from '@/store'
 
 // Views
 import Home from '@/views/Home.vue'
@@ -34,7 +33,7 @@ const routes = [
     props: true,
     beforeEnter(to, from, next) {
       // Check if thread exists
-      const threadExists = sourceData.threads.find(
+      const threadExists = store.state.threads.threads.find(
         (thread) => thread.id === to.params.id
       )
       // if exists continue

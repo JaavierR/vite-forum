@@ -47,8 +47,7 @@ export default {
         ...eventData.post,
         threadId: id.value,
       }
-      posts.value.push(post)
-      thread.value.posts.push(post.id)
+      store.dispatch('posts/createPost', post)
     }
 
     return {

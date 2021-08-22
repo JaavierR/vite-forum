@@ -27,9 +27,7 @@ export default {
     const text = ref('')
 
     const save = () => {
-      const postId = 'gggg' + Math.random()
       const post = {
-        id: postId,
         text: text.value,
         publishedAt: Math.floor(Date.now() / 1000),
         userId: 'HJNTR1nN8tgbB148RJrPYbby8Vl1',
