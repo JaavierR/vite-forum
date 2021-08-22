@@ -9,8 +9,7 @@
 </template>
 
 <script>
-import sourceData from '@/data.json'
-
+import { useStore } from 'vuex'
 import ForumList from './ForumList.vue'
 
 export default {
@@ -22,8 +21,12 @@ export default {
     },
   },
   setup() {
+    const store = useStore()
+
     const getForumsForCategory = (category) =>
-      sourceData.forums.filter((forum) => forum.categoryId === category.id)
+      store.state.forums.forums.filter(
+        (forum) => forum.categoryId === category.id
+      )
 
     return { getForumsForCategory }
   },

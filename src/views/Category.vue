@@ -5,7 +5,7 @@
 
 <script>
 import { computed, toRefs } from '@vue/reactivity'
-import sourceData from '@/data.json'
+import { useStore } from 'vuex'
 
 import ForumList from '@/components/ForumList.vue'
 
@@ -18,14 +18,18 @@ export default {
     },
   },
   setup(props) {
+    const store = useStore()
     const { id } = toRefs(props)
+    const forums = computed(() => store.state.forums.forums)
 
     const category = computed(() =>
-      sourceData.categories.find((category) => category.id === id.value)
+      store.state.categories.categories.find(
+        (category) => category.id === id.value
+      )
     )
 
     const getForumsForCategory = (category) =>
-      sourceData.forums.filter((forum) => forum.categoryId === category.id)
+      forums.value.filter((forum) => forum.categoryId === category.id)
 
     return {
       category,

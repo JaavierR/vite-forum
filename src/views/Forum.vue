@@ -15,7 +15,7 @@
 
 <script>
 import { computed, toRefs } from '@vue/reactivity'
-import sourceData from '@/data.json'
+import { useStore } from 'vuex'
 
 import ThreadList from '@/components/ThreadList.vue'
 
@@ -28,14 +28,17 @@ export default {
     },
   },
   setup(props) {
+    const store = useStore()
     const { id } = toRefs(props)
 
     const forum = computed(() =>
-      sourceData.forums.find((forum) => forum.id === id.value)
+      store.state.forums.forums.find((forum) => forum.id === id.value)
     )
 
     const threads = computed(() =>
-      sourceData.threads.filter((thread) => thread.forumId === id.value)
+      store.state.threads.threads.filter(
+        (thread) => thread.forumId === id.value
+      )
     )
 
     return { forum, threads }

@@ -53,7 +53,8 @@
 </template>
 
 <script>
-import sourceData from '@/data.json'
+import { computed } from '@vue/reactivity'
+import { useStore } from 'vuex'
 
 export default {
   props: {
@@ -63,14 +64,16 @@ export default {
     },
   },
   setup() {
-    const { posts, users } = sourceData
+    const store = useStore()
+    const posts = computed(() => store.state.posts.posts)
+    const users = computed(() => store.state.users.users)
 
     const postById = (postId) => {
-      return posts.find((p) => p.id === postId)
+      return posts.value.find((p) => p.id === postId)
     }
 
     const userById = (userId) => {
-      return users.find((u) => u.id === userId)
+      return users.value.find((u) => u.id === userId)
     }
 
     return {

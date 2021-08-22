@@ -1,10 +1,12 @@
 import { createApp } from 'vue'
 import App from '@/App.vue'
 import router from '@/router'
+import store from '@/store'
 import '@/index.css'
 
 const forumApp = createApp(App)
 forumApp.use(router)
+forumApp.use(store)
 
 const requireComponent = import.meta.globEager('./components/App*.vue')
 

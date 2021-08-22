@@ -4,8 +4,8 @@
 </template>
 
 <script>
-import sourceData from '@/data.json'
-
+import { computed } from '@vue/reactivity'
+import { useStore } from 'vuex'
 import CategoryList from '@/components/CategoryList.vue'
 
 export default {
@@ -13,7 +13,8 @@ export default {
     CategoryList,
   },
   setup() {
-    const { categories } = sourceData
+    const store = useStore()
+    const categories = computed(() => store.state.categories.categories)
 
     return {
       categories,

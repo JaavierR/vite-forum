@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import { computed, reactive, toRefs } from 'vue'
-import sourceData from '@/data.json'
+import { computed, toRefs } from 'vue'
+import { useStore } from 'vuex'
 
 import PostList from '@/components/PostList.vue'
 import PostEditor from '@/components/PostEditor.vue'
@@ -25,23 +25,21 @@ export default {
     },
   },
   setup(props) {
+    const store = useStore()
     const { id } = toRefs(props)
-    const { threads, posts, users } = reactive(sourceData) // Use reactive instead of ref for objects
+    const threads = computed(() => store.state.threads.threads)
+    const posts = computed(() => store.state.posts.posts)
 
     const thread = computed(
-      () => threads.find((thread) => thread.id === id.value) // Also available under route.params.id
+      () => threads.value.find((thread) => thread.id === id.value) // Also available under route.params.id
     )
 
     const threadPosts = computed(() =>
-      posts.filter((post) => post.threadId === id.value)
+      posts.value.filter((post) => post.threadId === id.value)
     )
 
     const postById = (postId) => {
-      return posts.find((p) => p.id === postId)
-    }
-
-    const userById = (userId) => {
-      return users.find((u) => u.id === userId)
+      return posts.value.find((p) => p.id === postId)
     }
 
     const addPost = (eventData) => {
@@ -49,7 +47,7 @@ export default {
         ...eventData.post,
         threadId: id.value,
       }
-      posts.push(post)
+      posts.value.push(post)
       thread.value.posts.push(post.id)
     }
 
@@ -60,7 +58,6 @@ export default {
 
       // Methods
       postById,
-      userById,
       addPost,
     }
   },
