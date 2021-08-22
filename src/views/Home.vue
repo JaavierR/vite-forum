@@ -1,5 +1,5 @@
 <template>
-  <h1 class="my-4 text-3xl font-medium">Welcome to the forum</h1>
+  <h1 class="mt-10 mb-6 text-3xl font-medium">Welcome to the forum</h1>
   <category-list :categories="categories" />
 </template>
 
