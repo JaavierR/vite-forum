@@ -16,11 +16,11 @@
           <a href="#">
             <img
               class="avatar-small"
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
+              :src="authUser.avatar"
+              :alt="`${authUser.name} profile picture`"
             />
             <span>
-              Javier Reyes
+              {{ authUser.name }}
               <img
                 class="icon-profile"
                 src="@/assets/svg/arrow-profile.svg"
@@ -47,9 +47,17 @@
 </template>
 
 <script>
+import { computed } from '@vue/reactivity'
+import { useStore } from 'vuex'
+
 export default {
   setup() {
-    return {}
+    const store = useStore()
+    const authUser = computed(() => store.getters['users/authUser'])
+
+    return {
+      authUser,
+    }
   },
 }
 </script>
