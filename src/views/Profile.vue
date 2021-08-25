@@ -2,6 +2,7 @@
   <div class="flex-grid">
     <div class="col-3 push-top">
       <user-profile-card :user="user" />
+      <user-profile-card-editor :user="user" />
 
       <p class="text-center text-xsmall text-faded">
         Member since june 2003, last visited 4 hours ago.
@@ -32,9 +33,10 @@ import { useStore } from 'vuex'
 
 import PostList from '@/components/PostList.vue'
 import UserProfileCard from '@/components/UserProfileCard.vue'
+import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue'
 
 export default {
-  components: { PostList, UserProfileCard },
+  components: { PostList, UserProfileCard, UserProfileCardEditor },
   setup() {
     const store = useStore()
     const user = computed(() => store.getters['users/authUser'])

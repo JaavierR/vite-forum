@@ -6,8 +6,17 @@ export default {
     users: sourceData.users,
     authId: 'VXjpr2WHa8Ux4Bnggym8QFLdv5C3',
   },
-  mutations: {},
-  actions: {},
+  mutations: {
+    SET_USER(state, { user, userId }) {
+      const userIndex = state.users.findIndex((user) => user.id === userId)
+      state.users[userIndex] = user
+    },
+  },
+  actions: {
+    updateUser({ commit }, user) {
+      commit('SET_USER', { user, userId: user.id })
+    },
+  },
   getters: {
     authUser: (state, getters, rootState) => {
       const user = state.users.find((user) => user.id === state.authId)
