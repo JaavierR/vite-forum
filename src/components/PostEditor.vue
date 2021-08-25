@@ -29,8 +29,6 @@ export default {
     const save = () => {
       const post = {
         text: text.value,
-        publishedAt: Math.floor(Date.now() / 1000),
-        userId: 'HJNTR1nN8tgbB148RJrPYbby8Vl1',
       }
       emit('save', { post }) // Can access under eventData.post
 

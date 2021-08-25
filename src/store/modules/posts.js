@@ -11,8 +11,11 @@ export default {
     },
   },
   actions: {
-    createPost({ commit }, post) {
+    createPost({ commit, rootState }, post) {
       post.id = 'gggg' + Math.random()
+      post.userId = rootState.users.authId
+      post.publishedAt = Math.floor(Date.now() / 1000)
+
       commit('SET_POST', { post })
       commit(
         'threads/APPEND_POST_TO_THREAD',
