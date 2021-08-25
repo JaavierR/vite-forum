@@ -79,7 +79,7 @@
       </div>
 
       <div class="btn-group space-between">
-        <button class="btn-ghost">Cancel</button>
+        <button class="btn-ghost" @click.prevent="cancel">Cancel</button>
         <button type="submit" class="btn-blue">save</button>
       </div>
     </form>
@@ -89,6 +89,7 @@
 <script>
 import { reactive } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 export default {
   props: {
     user: {
@@ -98,6 +99,7 @@ export default {
   },
   setup(props) {
     const store = useStore()
+    const router = useRouter()
 
     // * We use reactive to maintain reactivy in the object,
     // also the dot operator allow us to clone the object and prevent
@@ -110,12 +112,18 @@ export default {
 
       // * To set object's value to a variable, I should pass a cloned object instead.
       store.dispatch('users/updateUser', { ...activeUser })
+      router.push({ name: 'Profile' })
+    }
+
+    const cancel = () => {
+      router.push({ name: 'Profile' })
     }
 
     return {
       activeUser,
 
       save,
+      cancel,
     }
   },
 }

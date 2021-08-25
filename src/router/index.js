@@ -58,6 +58,14 @@ const routes = [
     name: 'Profile',
     component: Profile,
   },
+  // When we define a route, we can define components props
+  //  by passing an object to the props option.
+  {
+    path: '/me/edit',
+    name: 'ProfileEdit',
+    component: Profile,
+    props: { edit: true },
+  },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

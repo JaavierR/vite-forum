@@ -1,17 +1,9 @@
 <template>
   <div class="flex-grid">
     <div class="col-3 push-top">
-      <user-profile-card :user="user" />
-      <user-profile-card-editor :user="user" />
-
-      <p class="text-center text-xsmall text-faded">
-        Member since june 2003, last visited 4 hours ago.
-      </p>
-
-      <div class="text-center">
-        <hr />
-        <a href="#" class="btn-green btn-small">Edit Profile</a>
-      </div>
+      <!-- User profile cards -->
+      <user-profile-card v-if="!edit" :user="user" />
+      <user-profile-card-editor v-else :user="user" />
     </div>
 
     <div class="col-7 push-top">
@@ -37,6 +29,12 @@ import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue'
 
 export default {
   components: { PostList, UserProfileCard, UserProfileCardEditor },
+  props: {
+    edit: {
+      type: Boolean,
+      default: false,
+    },
+  },
   setup() {
     const store = useStore()
     const user = computed(() => store.getters['users/authUser'])
