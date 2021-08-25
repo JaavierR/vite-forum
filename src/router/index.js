@@ -57,6 +57,7 @@ const routes = [
     path: '/me',
     name: 'Profile',
     component: Profile,
+    meta: { toTop: true, smoothScroll: true },
   },
   // When we define a route, we can define components props
   //  by passing an object to the props option.
@@ -76,6 +77,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to) {
+    const scroll = {}
+
+    if (to.meta.toTop) scroll.top = 0
+    if (to.meta.smoothScroll) scroll.behavior = 'smooth'
+
+    return scroll
+  },
 })
 
 export default router
