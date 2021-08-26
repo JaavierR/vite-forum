@@ -11,6 +11,11 @@ export default {
       const userIndex = state.users.findIndex((user) => user.id === userId)
       state.users[userIndex] = user
     },
+    APPEND_THREAD_TO_USER(state, { userId, threadId }) {
+      const user = state.users.find((user) => user.id === userId)
+      user.threads = user.threads || []
+      user.threads.push(threadId)
+    },
   },
   actions: {
     updateUser({ commit }, user) {
