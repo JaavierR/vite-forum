@@ -6,6 +6,7 @@ import Home from '@/views/Home.vue'
 import Category from '@/views/Category.vue'
 import Forum from '@/views/Forum.vue'
 import ThreadShow from '@/views/ThreadShow.vue'
+import ThreadCreate from '@/views/ThreadCreate.vue'
 import Profile from '@/views/Profile.vue'
 import NotFound from '@/views/NotFound.vue'
 
@@ -52,6 +53,12 @@ const routes = [
       }
       // if does not exist redirect to not found
     },
+  },
+  {
+    path: '/forum/:forumId/thread/create',
+    name: 'ThreadCreate',
+    component: ThreadCreate,
+    props: true,
   },
   {
     path: '/me',
