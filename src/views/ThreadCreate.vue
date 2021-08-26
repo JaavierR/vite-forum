@@ -39,7 +39,8 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import { reactive, ref } from '@vue/reactivity'
+import { useStore } from 'vuex'
 export default {
   props: {
     forum: {
@@ -47,16 +48,25 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    const store = useStore()
+    const forum = reactive(props.forum)
+
     const title = ref('')
     const text = ref('')
 
     const save = () => {
-      // vuex action
+      store.dispatch('threads/createThread', {
+        forumId: forum.id,
+        title: title.value,
+        text: text.value,
+      })
     }
     return {
       title,
       text,
+
+      save,
     }
   },
 }
