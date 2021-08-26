@@ -16,7 +16,10 @@ export default {
     },
   },
   actions: {
-    createThread({ commit, rootState, dispatch }, { title, text, forumId }) {
+    async createThread(
+      { state, commit, rootState, dispatch },
+      { title, text, forumId }
+    ) {
       const id = 'gggg' + Math.random()
       const userId = rootState.users.authId
       const publishedAt = Math.floor(Date.now() / 1000)
@@ -34,6 +37,8 @@ export default {
         { root: true }
       )
       dispatch('posts/createPost', { text, threadId: id }, { root: true })
+
+      return state.threads.find((thread) => thread.id === id)
     },
   },
   getters: {},

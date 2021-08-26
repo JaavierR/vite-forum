@@ -29,7 +29,7 @@
       </div>
 
       <div class="btn-group">
-        <button class="btn btn-ghost">Cancel</button>
+        <button class="btn btn-ghost" @click.prevent="cancel">Cancel</button>
         <button class="btn btn-blue" type="submit" name="Publish">
           Publish
         </button>
@@ -41,6 +41,7 @@
 <script>
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 export default {
   props: {
     forumId: {
@@ -50,6 +51,7 @@ export default {
   },
   setup(props) {
     const store = useStore()
+    const router = useRouter()
     const forumId = ref(props.forumId)
 
     const title = ref('')
@@ -59,19 +61,26 @@ export default {
       store.state.forums.forums.find((forum) => forum.id === forumId.value)
     )
 
-    const save = () => {
-      store.dispatch('threads/createThread', {
+    const save = async () => {
+      const thread = await store.dispatch('threads/createThread', {
         forumId: forumId.value,
         title: title.value,
         text: text.value,
       })
+      router.push({ name: 'ThreadShow', params: { id: thread.id } })
     }
+
+    const cancel = () => {
+      router.push({ name: 'Forum', params: { id: forum.value.id } })
+    }
+
     return {
       title,
       text,
       forum,
 
       save,
+      cancel,
     }
   },
 }
