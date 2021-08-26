@@ -4,37 +4,7 @@
       Create a new thread in <i>{{ forum.name }}</i>
     </h1>
 
-    <form @submit.prevent="save">
-      <div class="form-group">
-        <label for="thread_title">Title:</label>
-        <input
-          v-model="title"
-          type="text"
-          id="thread_title"
-          class="form-input"
-          name="title"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="thread_content">Content:</label>
-        <textarea
-          v-model="text"
-          class="form-input"
-          name="content"
-          id="thread_content"
-          cols="140"
-          rows="8"
-        ></textarea>
-      </div>
-
-      <div class="btn-group">
-        <button class="btn btn-ghost" @click.prevent="cancel">Cancel</button>
-        <button class="btn btn-blue" type="submit" name="Publish">
-          Publish
-        </button>
-      </div>
-    </form>
+    <thread-editor @save="save" @cancel="cancel" />
   </div>
 </template>
 
@@ -42,7 +12,13 @@
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+
+import ThreadEditor from '@/components/ThreadEditor.vue'
+
 export default {
+  components: {
+    ThreadEditor,
+  },
   props: {
     forumId: {
       type: String,
@@ -54,18 +30,15 @@ export default {
     const router = useRouter()
     const forumId = ref(props.forumId)
 
-    const title = ref('')
-    const text = ref('')
-
     const forum = computed(() =>
       store.state.forums.forums.find((forum) => forum.id === forumId.value)
     )
 
-    const save = async () => {
+    const save = async ({ title, text }) => {
       const thread = await store.dispatch('threads/createThread', {
         forumId: forumId.value,
-        title: title.value,
-        text: text.value,
+        title,
+        text,
       })
       router.push({ name: 'ThreadShow', params: { id: thread.id } })
     }
@@ -75,8 +48,6 @@ export default {
     }
 
     return {
-      title,
-      text,
       forum,
 
       save,
