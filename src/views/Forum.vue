@@ -20,6 +20,7 @@
 <script>
 import { computed, toRefs } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import { findById } from '@/helpers'
 
 import ThreadList from '@/components/ThreadList.vue'
 
@@ -35,9 +36,7 @@ export default {
     const store = useStore()
     const { id } = toRefs(props)
 
-    const forum = computed(() =>
-      store.state.forums.forums.find((forum) => forum.id === id.value)
-    )
+    const forum = computed(() => findById(store.state.forums.forums, id.value))
 
     const threads = computed(() =>
       store.state.threads.threads.filter(

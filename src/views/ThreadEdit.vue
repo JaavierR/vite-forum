@@ -17,6 +17,7 @@
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { findById } from '@/helpers'
 
 import ThreadEditor from '@/components/ThreadEditor.vue'
 
@@ -36,14 +37,11 @@ export default {
     const id = ref(props.id)
 
     const thread = computed(() =>
-      store.state.threads.threads.find((thread) => thread.id === id.value)
+      findById(store.state.threads.threads, id.value)
     )
 
     const text = computed(
-      () =>
-        store.state.posts.posts.find(
-          (post) => post.id === thread.value.posts[0]
-        ).text
+      () => findById(store.state.posts.posts, thread.value.posts[0]).text
     )
 
     const save = async ({ title, text }) => {

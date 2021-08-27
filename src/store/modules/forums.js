@@ -1,4 +1,5 @@
 import sourceData from '@/data'
+import { findById } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -7,7 +8,7 @@ export default {
   },
   mutations: {
     APPEND_THREAD_TO_FORUM(state, { forumId, threadId }) {
-      const forum = state.forums.find((forum) => forum.id === forumId)
+      const forum = findById(state.forums, forumId)
       forum.thread = forum.thread || []
       forum.threads.push(threadId)
     },

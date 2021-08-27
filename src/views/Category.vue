@@ -6,6 +6,7 @@
 <script>
 import { computed, toRefs } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import { findById } from '@/helpers'
 
 import ForumList from '@/components/ForumList.vue'
 
@@ -23,9 +24,7 @@ export default {
     const forums = computed(() => store.state.forums.forums)
 
     const category = computed(() =>
-      store.state.categories.categories.find(
-        (category) => category.id === id.value
-      )
+      findById(store.state.categories.categories, id.value)
     )
 
     const getForumsForCategory = (category) =>

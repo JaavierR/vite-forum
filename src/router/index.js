@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '@/store'
+import { findById } from '@/helpers'
 
 // Views
 import Home from '@/views/Home.vue'
@@ -36,9 +37,7 @@ const routes = [
     props: true,
     beforeEnter(to, from, next) {
       // Check if thread exists
-      const threadExists = store.state.threads.threads.find(
-        (thread) => thread.id === to.params.id
-      )
+      const threadExists = findById(store.state.threads.threads, to.params.id)
       // if exists continue
       if (threadExists) {
         return next()

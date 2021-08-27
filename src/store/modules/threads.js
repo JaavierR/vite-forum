@@ -1,4 +1,5 @@
 import sourceData from '@/data'
+import { findById, upsert } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -7,17 +8,12 @@ export default {
   },
   mutations: {
     APPEND_POST_TO_THREAD(state, { postId, threadId }) {
-      const thread = state.threads.find((thread) => thread.id === threadId)
+      const thread = findById(state.threads, threadId)
       thread.posts = thread.posts || []
       thread.posts.push(postId)
     },
     SET_THREAD(state, { thread }) {
-      const index = state.threads.findIndex((t) => t.id === thread.id)
-      if (thread.id && index !== -1) {
-        state.threads[index] = thread
-      } else {
-        state.threads.push(thread)
-      }
+      upsert(state.threads, thread)
     },
   },
   actions: {
@@ -43,13 +39,11 @@ export default {
       )
       dispatch('posts/createPost', { text, threadId: id }, { root: true })
 
-      return state.threads.find((thread) => thread.id === id)
+      return findById(state.threads, id)
     },
     async updateThread({ commit, state, rootState }, { title, text, id }) {
-      const thread = state.threads.find((thread) => thread.id === id)
-      const post = rootState.posts.posts.find(
-        (post) => post.id === thread.posts[0]
-      )
+      const thread = findById(state.threads, id)
+      const post = findById(rootState.posts.posts, thread.posts[0])
       const newThread = { ...thread, title }
       const newPost = { ...post, text }
 

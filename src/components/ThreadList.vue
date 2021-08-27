@@ -55,6 +55,7 @@
 <script>
 import { computed } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import { findById } from '@/helpers'
 
 export default {
   props: {
@@ -68,13 +69,9 @@ export default {
     const posts = computed(() => store.state.posts.posts)
     const users = computed(() => store.state.users.users)
 
-    const postById = (postId) => {
-      return posts.value.find((p) => p.id === postId)
-    }
+    const postById = (postId) => findById(posts.value, postId)
 
-    const userById = (userId) => {
-      return users.value.find((u) => u.id === userId)
-    }
+    const userById = (userId) => findById(users.value, userId)
 
     return {
       postById,

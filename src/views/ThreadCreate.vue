@@ -12,6 +12,7 @@
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { findById } from '@/helpers'
 
 import ThreadEditor from '@/components/ThreadEditor.vue'
 
@@ -31,7 +32,7 @@ export default {
     const forumId = ref(props.forumId)
 
     const forum = computed(() =>
-      store.state.forums.forums.find((forum) => forum.id === forumId.value)
+      findById(store.state.forums.forums, forumId.value)
     )
 
     const save = async ({ title, text }) => {

@@ -1,4 +1,5 @@
 import sourceData from '@/data'
+import { upsert } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -7,12 +8,7 @@ export default {
   },
   mutations: {
     SET_POST(state, { post }) {
-      const index = state.posts.findIndex((p) => p.id === post.id)
-      if (post.id && index !== -1) {
-        state.posts[index] = post
-      } else {
-        state.posts.push(post)
-      }
+      upsert(state.posts, post)
     },
   },
   actions: {

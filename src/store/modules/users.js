@@ -1,4 +1,5 @@
 import sourceData from '@/data'
+import { findById } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -12,7 +13,7 @@ export default {
       state.users[userIndex] = user
     },
     APPEND_THREAD_TO_USER(state, { userId, threadId }) {
-      const user = state.users.find((user) => user.id === userId)
+      const user = findById(state.users, userId)
       user.threads = user.threads || []
       user.threads.push(threadId)
     },
@@ -23,8 +24,8 @@ export default {
     },
   },
   getters: {
-    authUser: (state, getters, rootState) => {
-      const user = state.users.find((user) => user.id === state.authId)
+    authUser: (state, _, rootState) => {
+      const user = findById(state.users, state.authId)
 
       if (!user) return null
 

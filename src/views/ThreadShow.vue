@@ -18,6 +18,7 @@
 <script>
 import { computed, toRefs } from 'vue'
 import { useStore } from 'vuex'
+import { findById } from '@/helpers'
 
 import PostList from '@/components/PostList.vue'
 import PostEditor from '@/components/PostEditor.vue'
@@ -40,16 +41,12 @@ export default {
     const posts = computed(() => store.state.posts.posts)
 
     const thread = computed(
-      () => threads.value.find((thread) => thread.id === id.value) // Also available under route.params.id
+      () => findById(threads.value, id.value) // Also available under route.params.id
     )
 
     const threadPosts = computed(() =>
       posts.value.filter((post) => post.threadId === id.value)
     )
-
-    const postById = (postId) => {
-      return posts.value.find((p) => p.id === postId)
-    }
 
     const addPost = (eventData) => {
       const post = {
@@ -65,7 +62,6 @@ export default {
       threadPosts,
 
       // Methods
-      postById,
       addPost,
     }
   },
