@@ -27,13 +27,15 @@
       <button class="btn btn-ghost" @click.prevent="$emit('cancel')">
         Cancel
       </button>
-      <button class="btn btn-blue" type="submit" name="Publish">Publish</button>
+      <button class="btn btn-blue" type="submit" name="Publish">
+        {{ saveButtonText }}
+      </button>
     </div>
   </form>
 </template>
 
 <script>
-import { reactive, toRefs } from '@vue/reactivity'
+import { computed, reactive, toRefs } from '@vue/reactivity'
 
 export default {
   props: {
@@ -50,11 +52,13 @@ export default {
     const { title, text } = toRefs(props)
     const form = reactive({ title: title.value, text: text.value })
 
+    const saveButtonText = computed(() => (title.value ? 'Update' : 'Publish'))
+
     const save = () => {
       emit('save', { ...form })
     }
 
-    return { form, save }
+    return { form, save, saveButtonText }
   },
 }
 </script>

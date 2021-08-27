@@ -56,7 +56,7 @@ export default {
     }
 
     const cancel = () => {
-      // router.push({ name: 'Forum', params: { id: forum.value.id } })
+      router.push({ name: 'ThreadShow', params: { id: id.value } })
     }
 
     return {
