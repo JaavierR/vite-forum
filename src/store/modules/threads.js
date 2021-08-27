@@ -12,7 +12,12 @@ export default {
       thread.posts.push(postId)
     },
     SET_THREAD(state, { thread }) {
-      state.threads.push(thread)
+      const index = state.threads.findIndex((t) => t.id === thread.id)
+      if (thread.id && index !== -1) {
+        state.threads[index] = thread
+      } else {
+        state.threads.push(thread)
+      }
     },
   },
   actions: {
@@ -39,6 +44,19 @@ export default {
       dispatch('posts/createPost', { text, threadId: id }, { root: true })
 
       return state.threads.find((thread) => thread.id === id)
+    },
+    async updateThread({ commit, state, rootState }, { title, text, id }) {
+      const thread = state.threads.find((thread) => thread.id === id)
+      const post = rootState.posts.posts.find(
+        (post) => post.id === thread.posts[0]
+      )
+      const newThread = { ...thread, title }
+      const newPost = { ...post, text }
+
+      commit('SET_THREAD', { thread: newThread })
+      commit('posts/SET_POST', { post: newPost }, { root: true })
+
+      return newThread
     },
   },
   getters: {},

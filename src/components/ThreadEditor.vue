@@ -3,7 +3,7 @@
     <div class="form-group">
       <label for="thread_title">Title:</label>
       <input
-        v-model="title"
+        v-model="form.title"
         type="text"
         id="thread_title"
         class="form-input"
@@ -14,7 +14,7 @@
     <div class="form-group">
       <label for="thread_content">Content:</label>
       <textarea
-        v-model="text"
+        v-model="form.text"
         class="form-input"
         name="content"
         id="thread_content"
@@ -33,17 +33,28 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import { reactive, toRefs } from '@vue/reactivity'
+
 export default {
-  setup(_, { emit }) {
-    const title = ref('')
-    const text = ref('')
+  props: {
+    title: {
+      type: String,
+      default: '',
+    },
+    text: {
+      type: String,
+      default: '',
+    },
+  },
+  setup(props, { emit }) {
+    const { title, text } = toRefs(props)
+    const form = reactive({ title: title.value, text: text.value })
 
     const save = () => {
-      emit('save', { title: title.value, text: text.value })
+      emit('save', { ...form })
     }
 
-    return { title, text, save }
+    return { form, save }
   },
 }
 </script>
