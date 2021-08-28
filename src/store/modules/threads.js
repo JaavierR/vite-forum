@@ -25,7 +25,7 @@ export default {
       { title, text, forumId }
     ) {
       const id = 'gggg' + Math.random()
-      const userId = rootState.users.authId
+      const userId = rootState.auth.authId
       const publishedAt = Math.floor(Date.now() / 1000)
 
       const thread = { forumId, title, publishedAt, userId, id }

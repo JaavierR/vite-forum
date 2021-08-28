@@ -39,8 +39,8 @@ export default {
     const forum = computed(() => findById(store.state.forums.forums, id.value))
 
     const threads = computed(() =>
-      store.state.threads.threads.filter(
-        (thread) => thread.forumId === id.value
+      forum.value.threads.map((threadId) =>
+        store.getters['threads/thread'](threadId)
       )
     )
 

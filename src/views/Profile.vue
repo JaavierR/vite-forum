@@ -37,7 +37,7 @@ export default {
   },
   setup() {
     const store = useStore()
-    const user = computed(() => store.getters['users/authUser'])
+    const user = computed(() => store.getters['auth/authUser'])
 
     return {
       user,

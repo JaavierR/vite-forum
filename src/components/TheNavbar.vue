@@ -53,7 +53,7 @@ import { useStore } from 'vuex'
 export default {
   setup() {
     const store = useStore()
-    const authUser = computed(() => store.getters['users/authUser'])
+    const authUser = computed(() => store.getters['auth/authUser'])
 
     return {
       authUser,

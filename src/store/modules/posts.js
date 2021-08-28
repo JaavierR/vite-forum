@@ -14,7 +14,7 @@ export default {
   actions: {
     createPost({ commit, rootState }, post) {
       post.id = 'gggg' + Math.random()
-      post.userId = rootState.users.authId
+      post.userId = rootState.auth.authId
       post.publishedAt = Math.floor(Date.now() / 1000)
 
       commit('SET_POST', { post })

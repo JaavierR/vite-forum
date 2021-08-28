@@ -5,7 +5,6 @@ export default {
   namespaced: true,
   state: {
     users: sourceData.users,
-    authId: 'VXjpr2WHa8Ux4Bnggym8QFLdv5C3',
   },
   mutations: {
     SET_USER(state, { user, userId }) {
@@ -23,29 +22,33 @@ export default {
     },
   },
   getters: {
-    authUser: (state, _, rootState) => {
-      const user = findById(state.users, state.authId)
+    user: (state, _, rootState) => {
+      return (id) => {
+        const user = findById(state.users, id)
 
-      if (!user) return null
+        if (!user) return null
 
-      return {
-        ...user,
-        // The get keyword allow us to access the property like
-        // user.posts || user.postsCount
-        get posts() {
-          return rootState.posts.posts.filter((post) => post.userId === user.id)
-        },
-        get postsCount() {
-          return this.posts.length
-        },
-        get threads() {
-          return rootState.threads.threads.filter(
-            (thread) => thread.userId === user.id
-          )
-        },
-        get threadsCount() {
-          return this.threads.length
-        },
+        return {
+          ...user,
+          // The get keyword allow us to access the property like
+          // user.posts || user.postsCount
+          get posts() {
+            return rootState.posts.posts.filter(
+              (post) => post.userId === user.id
+            )
+          },
+          get postsCount() {
+            return this.posts.length
+          },
+          get threads() {
+            return rootState.threads.threads.filter(
+              (thread) => thread.userId === user.id
+            )
+          },
+          get threadsCount() {
+            return this.threads.length
+          },
+        }
       }
     },
   },
