@@ -14,6 +14,10 @@ export default {
     SET_THREAD(state, { thread }) {
       upsert(state.threads, thread)
     },
+    APPEND_CONTRIBUTOR_TO_THREAD: makeAppendChildToParentMutation({
+      parent: 'threads',
+      child: 'contributors',
+    }),
   },
   actions: {
     async createThread(
@@ -52,5 +56,26 @@ export default {
       return newThread
     },
   },
-  getters: {},
+  getters: {
+    thread: (state, _, rootState) => {
+      return (id) => {
+        const thread = findById(state.threads, id)
+        return {
+          ...thread,
+          // * We don't allways need the properties author,... on the returned
+          // * thread, so they are created using native js getters.
+          // * This way, the computation only happens when we access the prop.
+          get author() {
+            return findById(rootState.users.users, thread.userId)
+          },
+          get repliesCount() {
+            return thread.posts.length - 1
+          },
+          get contributorsCount() {
+            return thread.contributors?.length || 1
+          },
+        }
+      }
+    },
+  },
 }

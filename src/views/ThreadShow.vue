@@ -10,6 +10,16 @@
         Edit Thread
       </router-link>
     </h1>
+
+    <p>
+      By <a href="#" class="link-unstyled">{{ thread.author.name }}</a
+      >, <app-date :timestamp="thread.publishedAt" />.
+      <span class="mt-[2px] hide-mobile text-faded text-small float-right"
+        >{{ thread.repliesCount }} replies by
+        {{ thread.contributorsCount }} contributors</span
+      >
+    </p>
+
     <post-list :posts="threadPosts" />
     <post-editor @save="addPost" />
   </div>
@@ -18,15 +28,16 @@
 <script>
 import { computed, toRefs } from 'vue'
 import { useStore } from 'vuex'
-import { findById } from '@/helpers'
 
 import PostList from '@/components/PostList.vue'
 import PostEditor from '@/components/PostEditor.vue'
+import AppDate from '@/components/AppDate.vue'
 
 export default {
   components: {
     PostList,
     PostEditor,
+    AppDate,
   },
   props: {
     id: {
@@ -37,11 +48,10 @@ export default {
   setup(props) {
     const store = useStore()
     const { id } = toRefs(props)
-    const threads = computed(() => store.state.threads.threads)
     const posts = computed(() => store.state.posts.posts)
 
     const thread = computed(
-      () => findById(threads.value, id.value) // Also available under route.params.id
+      () => store.getters['threads/thread'](id.value) // Also available under route.params.id
     )
 
     const threadPosts = computed(() =>

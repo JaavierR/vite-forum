@@ -25,6 +25,8 @@ export const makeAppendChildToParentMutation = ({ parent, child }) => {
   return (state, { parentId, childId }) => {
     const resource = findById(state[parent], parentId)
     resource[child] = resource[child] || []
-    resource[child].push(childId)
+    if (!resource[child].includes(childId)) {
+      resource[child].push(childId)
+    }
   }
 }

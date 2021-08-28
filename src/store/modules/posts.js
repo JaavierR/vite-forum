@@ -26,6 +26,11 @@ export default {
         },
         { root: true }
       )
+      commit(
+        'threads/APPEND_CONTRIBUTOR_TO_THREAD',
+        { parentId: post.threadId, childId: post.userId },
+        { root: true }
+      )
     },
   },
   getters: {},
