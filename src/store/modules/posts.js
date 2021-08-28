@@ -21,8 +21,8 @@ export default {
       commit(
         'threads/APPEND_POST_TO_THREAD',
         {
-          postId: post.id,
-          threadId: post.threadId,
+          parentId: post.threadId,
+          childId: post.id,
         },
         { root: true }
       )

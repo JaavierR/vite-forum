@@ -1,5 +1,5 @@
 import sourceData from '@/data'
-import { findById, upsert } from '@/helpers'
+import { findById, makeAppendChildToParentMutation, upsert } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -7,11 +7,10 @@ export default {
     threads: sourceData.threads,
   },
   mutations: {
-    APPEND_POST_TO_THREAD(state, { postId, threadId }) {
-      const thread = findById(state.threads, threadId)
-      thread.posts = thread.posts || []
-      thread.posts.push(postId)
-    },
+    APPEND_POST_TO_THREAD: makeAppendChildToParentMutation({
+      parent: 'threads',
+      child: 'posts',
+    }),
     SET_THREAD(state, { thread }) {
       upsert(state.threads, thread)
     },
@@ -29,12 +28,12 @@ export default {
       commit('SET_THREAD', { thread })
       commit(
         'users/APPEND_THREAD_TO_USER',
-        { userId, threadId: id },
+        { parentId: userId, childId: id },
         { root: true }
       )
       commit(
         'forums/APPEND_THREAD_TO_FORUM',
-        { forumId, threadId: id },
+        { parentId: forumId, childId: id },
         { root: true }
       )
       dispatch('posts/createPost', { text, threadId: id }, { root: true })

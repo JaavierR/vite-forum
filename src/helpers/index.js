@@ -13,3 +13,18 @@ export const upsert = (resources, resource) => {
     resources.push(resource)
   }
 }
+
+// * When a function is defined after it is called (eg. in the mutations of the
+// * store) It always use the old syntax.
+// * Variables declared with let and const must be declared before hey are used.
+
+// * See hoisting for: function name (...) {...}
+// * Hoisting => The function behaves as if it were hoisted to the top of the
+// * file and defined before it was called.
+export const makeAppendChildToParentMutation = ({ parent, child }) => {
+  return (state, { parentId, childId }) => {
+    const resource = findById(state[parent], parentId)
+    resource[child] = resource[child] || []
+    resource[child].push(childId)
+  }
+}

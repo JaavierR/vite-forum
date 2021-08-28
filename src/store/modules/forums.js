@@ -1,5 +1,5 @@
 import sourceData from '@/data'
-import { findById } from '@/helpers'
+import { makeAppendChildToParentMutation } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -7,11 +7,10 @@ export default {
     forums: sourceData.forums,
   },
   mutations: {
-    APPEND_THREAD_TO_FORUM(state, { forumId, threadId }) {
-      const forum = findById(state.forums, forumId)
-      forum.thread = forum.thread || []
-      forum.threads.push(threadId)
-    },
+    APPEND_THREAD_TO_FORUM: makeAppendChildToParentMutation({
+      parent: 'forums',
+      child: 'threads',
+    }),
   },
   actions: {},
   getters: {},

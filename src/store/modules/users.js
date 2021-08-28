@@ -1,5 +1,5 @@
 import sourceData from '@/data'
-import { findById } from '@/helpers'
+import { findById, makeAppendChildToParentMutation } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -12,11 +12,10 @@ export default {
       const userIndex = state.users.findIndex((user) => user.id === userId)
       state.users[userIndex] = user
     },
-    APPEND_THREAD_TO_USER(state, { userId, threadId }) {
-      const user = findById(state.users, userId)
-      user.threads = user.threads || []
-      user.threads.push(threadId)
-    },
+    APPEND_THREAD_TO_USER: makeAppendChildToParentMutation({
+      parent: 'users',
+      child: 'threads',
+    }),
   },
   actions: {
     updateUser({ commit }, user) {
