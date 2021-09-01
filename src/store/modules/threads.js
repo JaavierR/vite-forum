@@ -1,4 +1,4 @@
-import firebase from 'firebase/app'
+import firebase from 'firebase'
 import { findById, makeAppendChildToParentMutation, upsert } from '@/helpers'
 
 export default {
