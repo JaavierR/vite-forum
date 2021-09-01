@@ -1,23 +1,16 @@
-import firebase from 'firebase'
-import { upsert } from '@/helpers'
-
 export default {
   namespaced: true,
   state: {
     posts: [],
   },
-  mutations: {
-    SET_POST(state, { post }) {
-      upsert(state.posts, post)
-    },
-  },
+  mutations: {},
   actions: {
     createPost({ commit, rootState }, post) {
       post.id = 'gggg' + Math.random()
       post.userId = rootState.auth.authId
       post.publishedAt = Math.floor(Date.now() / 1000)
 
-      commit('SET_POST', { post })
+      commit('SET_ITEM', { resource: 'posts', item: post }, { root: true })
       commit(
         'threads/APPEND_POST_TO_THREAD',
         {
@@ -32,19 +25,12 @@ export default {
         { root: true }
       )
     },
-    fetchPost({ commit }, { id }) {
-      console.log('🔥💬', id)
-      return new Promise((resolve) => {
-        firebase
-          .firestore()
-          .collection('posts')
-          .doc(id)
-          .onSnapshot((doc) => {
-            const post = { ...doc.data(), id: doc.id }
-            commit('SET_POST', { post })
-            resolve(post)
-          })
-      })
+    fetchPost({ dispatch }, { id }) {
+      return dispatch(
+        'fetchItem',
+        { resource: 'posts', id, emoji: '💬' },
+        { root: true }
+      )
     },
   },
   getters: {},

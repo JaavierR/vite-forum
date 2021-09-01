@@ -1,5 +1,4 @@
-import firebase from 'firebase'
-import { findById, makeAppendChildToParentMutation, upsert } from '@/helpers'
+import { findById, makeAppendChildToParentMutation } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -11,9 +10,6 @@ export default {
       parent: 'threads',
       child: 'posts',
     }),
-    SET_THREAD(state, { thread }) {
-      upsert(state.threads, thread)
-    },
     APPEND_CONTRIBUTOR_TO_THREAD: makeAppendChildToParentMutation({
       parent: 'threads',
       child: 'contributors',
@@ -29,7 +25,7 @@ export default {
       const publishedAt = Math.floor(Date.now() / 1000)
 
       const thread = { forumId, title, publishedAt, userId, id }
-      commit('SET_THREAD', { thread })
+      commit('SET_ITEM', { resource: 'threads', item: thread }, { root: true })
       commit(
         'users/APPEND_THREAD_TO_USER',
         { parentId: userId, childId: id },
@@ -50,24 +46,23 @@ export default {
       const newThread = { ...thread, title }
       const newPost = { ...post, text }
 
-      commit('SET_THREAD', { thread: newThread })
-      commit('posts/SET_POST', { post: newPost }, { root: true })
+      commit(
+        'SET_ITEM',
+        { resource: 'threads', item: newThread },
+        { root: true }
+      )
+      commit('SET_ITEM', { resource: 'posts', item: newPost }, { root: true })
 
       return newThread
     },
-    fetchThread({ commit }, { id }) {
-      console.log('🔥📄', id)
-      return new Promise((resolve) => {
-        firebase
-          .firestore()
-          .collection('threads')
-          .doc(id)
-          .onSnapshot((doc) => {
-            const thread = { ...doc.data(), id: doc.id }
-            commit('SET_THREAD', { thread })
-            resolve(thread)
-          })
-      })
+    fetchThread({ dispatch }, { id }) {
+      // * dispatch by default return a Promise so there are no need to wrap
+      // * dispatch in a Promise.
+      return dispatch(
+        'fetchItem',
+        { resource: 'threads', id, emoji: '📄' },
+        { root: true }
+      )
     },
   },
   getters: {

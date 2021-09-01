@@ -1,5 +1,4 @@
-import firebase from 'firebase'
-import { findById, makeAppendChildToParentMutation, upsert } from '@/helpers'
+import { findById, makeAppendChildToParentMutation } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -7,9 +6,6 @@ export default {
     users: [],
   },
   mutations: {
-    SET_USER(state, { user }) {
-      upsert(state.users, user)
-    },
     APPEND_THREAD_TO_USER: makeAppendChildToParentMutation({
       parent: 'users',
       child: 'threads',
@@ -17,21 +13,14 @@ export default {
   },
   actions: {
     updateUser({ commit }, user) {
-      commit('SET_USER', { user })
+      commit('SET_ITEM', { resource: 'users', item: user }, { root: true })
     },
-    fetchUser({ commit }, { id }) {
-      console.log('🔥🙋🏽‍♂️', id)
-      return new Promise((resolve) => {
-        firebase
-          .firestore()
-          .collection('users')
-          .doc(id)
-          .onSnapshot((doc) => {
-            const user = { ...doc.data(), id: doc.id }
-            commit('SET_USER', { user })
-            resolve(user)
-          })
-      })
+    fetchUser({ dispatch }, { id }) {
+      return dispatch(
+        'fetchItem',
+        { resource: 'users', id, emoji: '🙋🏽‍♂️' },
+        { root: true }
+      )
     },
   },
   getters: {

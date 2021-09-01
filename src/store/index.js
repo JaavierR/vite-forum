@@ -1,5 +1,8 @@
 import { createStore } from 'vuex'
 
+import actions from '@/store/actions'
+import mutations from '@/store/mutations'
+
 import auth from './modules/auth'
 import categories from './modules/categories'
 import forums from './modules/forums'
@@ -16,6 +19,8 @@ const store = createStore({
     users,
     threads,
   },
+  actions,
+  mutations,
 })
 
 export default store
