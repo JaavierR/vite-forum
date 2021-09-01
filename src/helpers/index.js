@@ -1,6 +1,9 @@
 // * Helpers allow us to write DRY code & also extract some
 // * lengthier code.
-export const findById = (resources, id) => resources.find((r) => r.id === id)
+export const findById = (resources, id) => {
+  if (!resources) return null
+  return resources.find((r) => r.id === id)
+}
 
 // * upsert: update the resource if it exists, and if it doesn't exist, add it.
 // * to the array of resources.
