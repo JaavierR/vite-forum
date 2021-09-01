@@ -1,10 +1,9 @@
-import sourceData from '@/data'
 import { makeAppendChildToParentMutation } from '@/helpers'
 
 export default {
   namespaced: true,
   state: {
-    forums: sourceData.forums,
+    forums: [],
   },
   mutations: {
     APPEND_THREAD_TO_FORUM: makeAppendChildToParentMutation({

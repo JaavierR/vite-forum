@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { initializeApp } from 'firebase/app'
+import firebase from 'firebase/app'
 import App from '@/App.vue'
 import firebaseConfig from '@/config/firebase'
 import router from '@/router'
@@ -7,7 +7,7 @@ import store from '@/store'
 // Tailwind styles
 import '@/index.css'
 
-initializeApp(firebaseConfig)
+firebase.initializeApp(firebaseConfig)
 
 const forumApp = createApp(App)
 forumApp.use(router)

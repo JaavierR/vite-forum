@@ -1,5 +1,5 @@
 <template>
-  <div class="col-large push-top">
+  <div v-if="thread" class="col-large push-top">
     <h1 class="my-4 text-3xl font-medium">
       {{ thread.title }}
       <router-link
@@ -12,7 +12,7 @@
     </h1>
 
     <p>
-      By <a href="#" class="link-unstyled">{{ thread.author.name }}</a
+      By <a href="#" class="link-unstyled">{{ thread.author?.name }}</a
       >, <app-date :timestamp="thread.publishedAt" />.
       <span class="mt-[2px] hide-mobile text-faded text-small float-right"
         >{{ thread.repliesCount }} replies by
@@ -28,6 +28,7 @@
 <script>
 import { computed, toRefs } from 'vue'
 import { useStore } from 'vuex'
+import useThread from '@/composables/useThread.js'
 
 import PostList from '@/components/PostList.vue'
 import PostEditor from '@/components/PostEditor.vue'
@@ -48,6 +49,10 @@ export default {
   setup(props) {
     const store = useStore()
     const { id } = toRefs(props)
+    const { fetchThread } = useThread()
+
+    fetchThread(id.value)
+
     const posts = computed(() => store.state.posts.posts)
 
     const thread = computed(

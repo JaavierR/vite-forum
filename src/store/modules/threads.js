@@ -1,10 +1,10 @@
-import sourceData from '@/data'
+import firebase from 'firebase/app'
 import { findById, makeAppendChildToParentMutation, upsert } from '@/helpers'
 
 export default {
   namespaced: true,
   state: {
-    threads: sourceData.threads,
+    threads: [],
   },
   mutations: {
     APPEND_POST_TO_THREAD: makeAppendChildToParentMutation({
@@ -54,6 +54,20 @@ export default {
       commit('posts/SET_POST', { post: newPost }, { root: true })
 
       return newThread
+    },
+    fetchThread({ commit }, { id }) {
+      console.log('🔥📄', id)
+      return new Promise((resolve) => {
+        firebase
+          .firestore()
+          .collection('threads')
+          .doc(id)
+          .onSnapshot((doc) => {
+            const thread = { ...doc.data(), id: doc.id }
+            commit('SET_THREAD', { thread })
+            resolve(thread)
+          })
+      })
     },
   },
   getters: {

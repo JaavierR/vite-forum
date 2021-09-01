@@ -1,15 +1,14 @@
-import sourceData from '@/data'
-import { findById, makeAppendChildToParentMutation } from '@/helpers'
+import firebase from 'firebase/app'
+import { findById, makeAppendChildToParentMutation, upsert } from '@/helpers'
 
 export default {
   namespaced: true,
   state: {
-    users: sourceData.users,
+    users: [],
   },
   mutations: {
-    SET_USER(state, { user, userId }) {
-      const userIndex = state.users.findIndex((user) => user.id === userId)
-      state.users[userIndex] = user
+    SET_USER(state, { user }) {
+      upsert(state.users, user)
     },
     APPEND_THREAD_TO_USER: makeAppendChildToParentMutation({
       parent: 'users',
@@ -18,7 +17,21 @@ export default {
   },
   actions: {
     updateUser({ commit }, user) {
-      commit('SET_USER', { user, userId: user.id })
+      commit('SET_USER', { user })
+    },
+    fetchUser({ commit }, { id }) {
+      console.log('🔥🙋🏽‍♂️', id)
+      return new Promise((resolve) => {
+        firebase
+          .firestore()
+          .collection('users')
+          .doc(id)
+          .onSnapshot((doc) => {
+            const user = { ...doc.data(), id: doc.id }
+            commit('SET_USER', { user })
+            resolve(user)
+          })
+      })
     },
   },
   getters: {

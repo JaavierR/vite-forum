@@ -1,10 +1,10 @@
-import sourceData from '@/data'
+import firebase from 'firebase/app'
 import { upsert } from '@/helpers'
 
 export default {
   namespaced: true,
   state: {
-    posts: sourceData.posts,
+    posts: [],
   },
   mutations: {
     SET_POST(state, { post }) {
@@ -31,6 +31,20 @@ export default {
         { parentId: post.threadId, childId: post.userId },
         { root: true }
       )
+    },
+    fetchPost({ commit }, { id }) {
+      console.log('🔥💬', id)
+      return new Promise((resolve) => {
+        firebase
+          .firestore()
+          .collection('posts')
+          .doc(id)
+          .onSnapshot((doc) => {
+            const post = { ...doc.data(), id: doc.id }
+            commit('SET_POST', { post })
+            resolve(post)
+          })
+      })
     },
   },
   getters: {},
