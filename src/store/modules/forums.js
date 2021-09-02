@@ -11,6 +11,14 @@ export default {
       child: 'threads',
     }),
   },
-  actions: {},
+  actions: {
+    fetchForums({ dispatch }, { ids }) {
+      return dispatch(
+        'fetchItems',
+        { ids, emoji: '🏁', resource: 'forums' },
+        { root: true }
+      )
+    },
+  },
   getters: {},
 }

@@ -14,6 +14,14 @@ export default {
   },
   setup() {
     const store = useStore()
+    const fetchAllCategories = async () => {
+      const categories = await store.dispatch('categories/fetchAllCategories')
+      const forumIds = categories.map((category) => category.forums).flat()
+      store.dispatch('forums/fetchForums', { ids: forumIds })
+    }
+
+    fetchAllCategories()
+
     const categories = computed(() => store.state.categories.categories)
 
     return {
