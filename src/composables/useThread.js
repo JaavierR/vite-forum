@@ -11,12 +11,13 @@ export default function useThread() {
     store.dispatch('users/fetchUser', { id: thread.userId })
 
     // fetch the posts
-    thread.posts.forEach(async (postId) => {
-      const post = await store.dispatch('posts/fetchPost', {
-        id: postId,
-      })
-      store.dispatch('users/fetchUser', { id: post.userId })
+    const posts = await store.dispatch('posts/fetchPosts', {
+      ids: thread.posts,
     })
+
+    // fetch the users associated with the posts
+    const users = posts.map((post) => post.userId)
+    store.dispatch('users/fetchUsers', { ids: users })
   }
 
   return { fetchThread }

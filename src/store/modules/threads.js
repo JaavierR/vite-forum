@@ -64,6 +64,17 @@ export default {
         { root: true }
       )
     },
+    fetchThreads({ dispatch }, { ids }) {
+      return dispatch(
+        'fetchItems',
+        {
+          ids,
+          emoji: '📄',
+          resource: 'threads',
+        },
+        { root: true }
+      )
+    },
   },
   getters: {
     thread: (state, _, rootState) => {

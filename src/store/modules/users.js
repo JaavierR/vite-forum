@@ -22,6 +22,17 @@ export default {
         { root: true }
       )
     },
+    fetchUsers({ dispatch }, { ids }) {
+      return dispatch(
+        'fetchItems',
+        {
+          ids,
+          emoji: '🙋🏽‍♂️',
+          resource: 'users',
+        },
+        { root: true }
+      )
+    },
   },
   getters: {
     user: (state, _, rootState) => {

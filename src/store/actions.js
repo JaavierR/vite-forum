@@ -15,4 +15,9 @@ export default {
         })
     })
   },
+  fetchItems({ dispatch }, { ids, resource, emoji }) {
+    return Promise.all(
+      ids.map((id) => dispatch('fetchItem', { id, emoji, resource }))
+    )
+  },
 }

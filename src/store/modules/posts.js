@@ -32,6 +32,17 @@ export default {
         { root: true }
       )
     },
+    fetchPosts({ dispatch }, { ids }) {
+      return dispatch(
+        'fetchItems',
+        {
+          ids,
+          emoji: '💬',
+          resource: 'posts',
+        },
+        { root: true }
+      )
+    },
   },
   getters: {},
 }
