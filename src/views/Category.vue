@@ -1,5 +1,5 @@
 <template>
-  <h1>{{ category.name }}</h1>
+  <h1 class="text-3xl font-bold">{{ category.name }}</h1>
   <forum-list :title="category.name" :forums="getForumsForCategory(category)" />
 </template>
 
@@ -21,11 +21,19 @@ export default {
   setup(props) {
     const store = useStore()
     const { id } = toRefs(props)
-    const forums = computed(() => store.state.forums.forums)
 
-    const category = computed(() =>
-      findById(store.state.categories.categories, id.value)
+    const fecthCategory = async (id) => {
+      const category = await store.dispatch('categories/fetchCategory', { id })
+      store.dispatch('forums/fetchForums', { ids: category.forums })
+    }
+
+    fecthCategory(id.value)
+
+    const category = computed(
+      () => findById(store.state.categories.categories, id.value) || {}
     )
+
+    const forums = computed(() => store.state.forums.forums)
 
     const getForumsForCategory = (category) =>
       forums.value.filter((forum) => forum.categoryId === category.id)

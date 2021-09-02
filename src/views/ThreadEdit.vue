@@ -1,5 +1,5 @@
 <template>
-  <div class="col-full push-top">
+  <div v-if="thread && text" class="col-full push-top">
     <h1>
       Editing <i>{{ thread.title }}</i>
     </h1>
@@ -36,13 +36,21 @@ export default {
     const router = useRouter()
     const id = ref(props.id)
 
+    const fetchThread = async (id) => {
+      const thread = await store.dispatch('threads/fetchThread', { id })
+      store.dispatch('posts/fetchPost', { id: thread.posts[0] })
+    }
+
+    fetchThread(id.value)
+
     const thread = computed(() =>
       findById(store.state.threads.threads, id.value)
     )
 
-    const text = computed(
-      () => findById(store.state.posts.posts, thread.value.posts[0]).text
-    )
+    const text = computed(() => {
+      const post = findById(store.state.posts.posts, thread.value.posts[0])
+      return post ? post.text : ''
+    })
 
     const save = async ({ title, text }) => {
       const thread = await store.dispatch('threads/updateThread', {
