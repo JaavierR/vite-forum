@@ -80,6 +80,7 @@ export default {
     thread: (state, _, rootState) => {
       return (id) => {
         const thread = findById(state.threads, id)
+        if (!thread) return {}
         return {
           ...thread,
           // * We don't allways need the properties author,... on the returned

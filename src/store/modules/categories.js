@@ -7,6 +7,20 @@ export default {
   },
   mutations: {},
   actions: {
+    fetchCategory({ dispatch }, { id }) {
+      return dispatch(
+        'fetchItem',
+        { id, emoji: '🏷', resource: 'categories' },
+        { root: true }
+      )
+    },
+    fetchCategories({ dispatch }, { ids }) {
+      return dispatch(
+        'fetchItems',
+        { ids, emoji: '🏷', resource: 'categories' },
+        { root: true }
+      )
+    },
     fetchAllCategories({ commit }) {
       console.log('🔥', '🏷', 'all')
       return new Promise((resolve) => {

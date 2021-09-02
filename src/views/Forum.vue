@@ -1,5 +1,5 @@
 <template>
-  <div class="col-full push-top">
+  <div v-if="forum" class="col-full push-top">
     <div class="forum-header">
       <div class="forum-details">
         <h1>{{ forum.name }}</h1>
@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="col-full push-top">
-    <thread-list :threads="threads" />
+    <thread-list v-if="threads.length" :threads="threads" />
   </div>
 </template>
 
@@ -36,13 +36,27 @@ export default {
     const store = useStore()
     const { id } = toRefs(props)
 
+    const fetchForum = async (id) => {
+      const forum = await store.dispatch('forums/fetchForum', { id })
+      const threads = await store.dispatch('threads/fetchThreads', {
+        ids: forum.threads,
+      })
+
+      store.dispatch('users/fetchUsers', {
+        ids: threads.map((thread) => thread.userId),
+      })
+    }
+
+    fetchForum(id.value)
+
     const forum = computed(() => findById(store.state.forums.forums, id.value))
 
-    const threads = computed(() =>
-      forum.value.threads.map((threadId) =>
+    const threads = computed(() => {
+      if (!forum.value) return []
+      return forum.value.threads.map((threadId) =>
         store.getters['threads/thread'](threadId)
       )
-    )
+    })
 
     return { forum, threads }
   },

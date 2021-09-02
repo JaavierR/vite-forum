@@ -6,8 +6,13 @@
       <div v-for="thread in threads" :key="thread.id" class="thread">
         <div>
           <p>
+            <!-- Add typeof verification 'cause on load this break the component (vue-router) if is undefined -->
             <router-link
-              :to="{ name: 'ThreadShow', params: { id: thread.id } }"
+              v-if="typeof thread.id !== 'undefined'"
+              :to="{
+                name: 'ThreadShow',
+                params: { id: thread.id },
+              }"
             >
               {{ thread.title }}
             </router-link>
@@ -71,7 +76,7 @@ export default {
 
     const postById = (postId) => findById(posts.value, postId)
 
-    const userById = (userId) => findById(users.value, userId)
+    const userById = (userId) => findById(users.value, userId) || {}
 
     return {
       postById,

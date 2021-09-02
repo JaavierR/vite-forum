@@ -12,6 +12,13 @@ export default {
     }),
   },
   actions: {
+    fetchForum({ dispatch }, { id }) {
+      return dispatch(
+        'fetchItem',
+        { id, emoji: '🏁', resource: 'forums' },
+        { root: true }
+      )
+    },
     fetchForums({ dispatch }, { ids }) {
       return dispatch(
         'fetchItems',
