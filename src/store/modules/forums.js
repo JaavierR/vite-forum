@@ -12,20 +12,18 @@ export default {
     }),
   },
   actions: {
-    fetchForum({ dispatch }, { id }) {
-      return dispatch(
+    fetchForum: ({ dispatch }, { id }) =>
+      dispatch(
         'fetchItem',
         { id, emoji: '🏁', resource: 'forums' },
         { root: true }
-      )
-    },
-    fetchForums({ dispatch }, { ids }) {
-      return dispatch(
+      ),
+    fetchForums: ({ dispatch }, { ids }) =>
+      dispatch(
         'fetchItems',
         { ids, emoji: '🏁', resource: 'forums' },
         { root: true }
-      )
-    },
+      ),
   },
   getters: {},
 }

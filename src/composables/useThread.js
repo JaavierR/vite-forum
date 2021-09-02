@@ -3,9 +3,7 @@ import store from '@/store'
 export default function useThread() {
   const fetchThread = async (id) => {
     // fetch the thread
-    const thread = await store.dispatch('threads/fetchThread', {
-      id,
-    })
+    const thread = await store.dispatch('threads/fetchThread', { id })
 
     // fetch the user
     store.dispatch('users/fetchUser', { id: thread.userId })

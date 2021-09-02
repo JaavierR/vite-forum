@@ -55,17 +55,16 @@ export default {
 
       return newThread
     },
-    fetchThread({ dispatch }, { id }) {
-      // * dispatch by default return a Promise so there are no need to wrap
-      // * dispatch in a Promise.
-      return dispatch(
+    // * dispatch by default return a Promise so there are no need to wrap
+    // * dispatch in a Promise.
+    fetchThread: ({ dispatch }, { id }) =>
+      dispatch(
         'fetchItem',
         { resource: 'threads', id, emoji: '📄' },
         { root: true }
-      )
-    },
-    fetchThreads({ dispatch }, { ids }) {
-      return dispatch(
+      ),
+    fetchThreads: ({ dispatch }, { ids }) =>
+      dispatch(
         'fetchItems',
         {
           ids,
@@ -73,8 +72,7 @@ export default {
           resource: 'threads',
         },
         { root: true }
-      )
-    },
+      ),
   },
   getters: {
     thread: (state, _, rootState) => {

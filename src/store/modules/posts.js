@@ -25,15 +25,14 @@ export default {
         { root: true }
       )
     },
-    fetchPost({ dispatch }, { id }) {
-      return dispatch(
+    fetchPost: ({ dispatch }, { id }) =>
+      dispatch(
         'fetchItem',
         { resource: 'posts', id, emoji: '💬' },
         { root: true }
-      )
-    },
-    fetchPosts({ dispatch }, { ids }) {
-      return dispatch(
+      ),
+    fetchPosts: ({ dispatch }, { ids }) =>
+      dispatch(
         'fetchItems',
         {
           ids,
@@ -41,8 +40,7 @@ export default {
           resource: 'posts',
         },
         { root: true }
-      )
-    },
+      ),
   },
   getters: {},
 }

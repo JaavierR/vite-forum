@@ -15,15 +15,14 @@ export default {
     updateUser({ commit }, user) {
       commit('SET_ITEM', { resource: 'users', item: user }, { root: true })
     },
-    fetchUser({ dispatch }, { id }) {
-      return dispatch(
+    fetchUser: ({ dispatch }, { id }) =>
+      dispatch(
         'fetchItem',
         { resource: 'users', id, emoji: '🙋🏽‍♂️' },
         { root: true }
-      )
-    },
-    fetchUsers({ dispatch }, { ids }) {
-      return dispatch(
+      ),
+    fetchUsers: ({ dispatch }, { ids }) =>
+      dispatch(
         'fetchItems',
         {
           ids,
@@ -31,8 +30,7 @@ export default {
           resource: 'users',
         },
         { root: true }
-      )
-    },
+      ),
   },
   getters: {
     user: (state, _, rootState) => {
