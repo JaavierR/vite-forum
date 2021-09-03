@@ -1,3 +1,4 @@
+import firebase from 'firebase/app'
 import { findById, makeAppendChildToParentMutation } from '@/helpers'
 
 export default {
@@ -20,25 +21,52 @@ export default {
       { state, commit, rootState, dispatch },
       { title, text, forumId }
     ) {
-      const id = 'gggg' + Math.random()
       const userId = rootState.auth.authId
-      const publishedAt = Math.floor(Date.now() / 1000)
-
-      const thread = { forumId, title, publishedAt, userId, id }
-      commit('SET_ITEM', { resource: 'threads', item: thread }, { root: true })
+      const publishedAt = firebase.firestore.FieldValue.serverTimestamp()
+      const threadRef = firebase.firestore().collection('threads').doc()
+      const thread = { forumId, title, publishedAt, userId, id: threadRef.id }
+      // Firebase
+      const userRef = firebase.firestore().collection('users').doc(userId)
+      const forumRef = firebase.firestore().collection('forums').doc(forumId)
+      const batch = firebase.firestore().batch()
+      // Write to firestore
+      batch.set(threadRef, thread)
+      batch.update(userRef, {
+        threads: firebase.firestore.FieldValue.arrayUnion(threadRef.id),
+      })
+      batch.update(forumRef, {
+        threads: firebase.firestore.FieldValue.arrayUnion(threadRef.id),
+      })
+      await batch.commit()
+      // Retrieve the created thread
+      const newThread = await threadRef.get()
+      // Set thread in vuex
+      commit(
+        'SET_ITEM',
+        {
+          resource: 'threads',
+          item: { ...newThread.data(), id: newThread.id },
+        },
+        { root: true }
+      )
       commit(
         'users/APPEND_THREAD_TO_USER',
-        { parentId: userId, childId: id },
+        { parentId: userId, childId: threadRef.id },
         { root: true }
       )
       commit(
         'forums/APPEND_THREAD_TO_FORUM',
-        { parentId: forumId, childId: id },
+        { parentId: forumId, childId: threadRef.id },
         { root: true }
       )
-      dispatch('posts/createPost', { text, threadId: id }, { root: true })
+      // We await the post creation because it's doing async actions.
+      await dispatch(
+        'posts/createPost',
+        { text, threadId: threadRef.id },
+        { root: true }
+      )
 
-      return findById(state.threads, id)
+      return findById(state.threads, threadRef.id)
     },
     async updateThread({ commit, state, rootState }, { title, text, id }) {
       const thread = findById(state.threads, id)
