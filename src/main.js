@@ -13,8 +13,8 @@ const forumApp = createApp(App)
 forumApp.use(router)
 forumApp.use(store)
 
+// Import global components in the vite way.
 const requireComponent = import.meta.globEager('./components/App*.vue')
-
 Object.entries(requireComponent).forEach(([path, definition]) => {
   // Get name of component, based on filename
   const componentName = path
