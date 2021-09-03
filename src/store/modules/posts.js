@@ -9,17 +9,19 @@ export default {
   actions: {
     async createPost({ commit, rootState }, post) {
       post.userId = rootState.auth.authId
-      post.publishedAt = Math.floor(Date.now() / 1000)
+      // Set timestamp from the server.
+      post.publishedAt = firebase.firestore.FieldValue.serverTimestamp()
       // * batch allow us to send posts and update the threads in a single
       // * transaction. This allow us to avoid some errors if the connection is
       // * lost. lesson 66.
+      // Create references to the desired collections
       const batch = firebase.firestore().batch()
       const postRef = firebase.firestore().collection('posts').doc()
       const threadRef = firebase
         .firestore()
         .collection('threads')
         .doc(post.threadId)
-
+      // Send the data to firebase.
       batch.set(postRef, post)
       batch.update(threadRef, {
         posts: firebase.firestore.FieldValue.arrayUnion(postRef.id),
@@ -28,16 +30,19 @@ export default {
         ),
       })
       await batch.commit()
+      // Retrieve the current post for consistency and also to access the
+      // timestamp from the server.
+      const newPost = await postRef.get()
       commit(
         'SET_ITEM',
-        { resource: 'posts', item: { ...post, id: postRef.id } },
+        { resource: 'posts', item: { ...newPost.data(), id: newPost.id } },
         { root: true }
       )
       commit(
         'threads/APPEND_POST_TO_THREAD',
         {
           parentId: post.threadId,
-          childId: postRef.id,
+          childId: newPost.id,
         },
         { root: true }
       )

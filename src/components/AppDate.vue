@@ -17,17 +17,23 @@ dayjs.extend(localizedDate)
 export default {
   props: {
     timestamp: {
-      type: Number,
+      type: [Number, Object],
       requried: true,
     },
   },
   setup(props) {
     const { timestamp } = toRefs(props)
 
-    const diffForHumans = computed(() => dayjs.unix(timestamp.value).fromNow())
+    const normalizedTimestamp = computed(
+      () => timestamp.value?.seconds || timestamp.value
+    )
+
+    const diffForHumans = computed(() =>
+      dayjs.unix(normalizedTimestamp.value).fromNow()
+    )
 
     const humanFriendlyDate = computed(() =>
-      dayjs.unix(timestamp.value).format('llll')
+      dayjs.unix(normalizedTimestamp.value).format('llll')
     )
 
     return { diffForHumans, humanFriendlyDate }
