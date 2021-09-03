@@ -49,7 +49,7 @@ export default {
             )
           },
           get postsCount() {
-            return this.posts.length
+            return user.postsCount || 0
           },
           get threads() {
             return rootState.threads.threads.filter(
@@ -57,7 +57,7 @@ export default {
             )
           },
           get threadsCount() {
-            return this.threads.length
+            return user.threads?.length || 0
           },
         }
       }

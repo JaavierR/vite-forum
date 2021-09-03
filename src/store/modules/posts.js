@@ -17,6 +17,10 @@ export default {
       // Create references to the desired collections
       const batch = firebase.firestore().batch()
       const postRef = firebase.firestore().collection('posts').doc()
+      const userRef = firebase
+        .firestore()
+        .collection('users')
+        .doc(rootState.auth.authId)
       const threadRef = firebase
         .firestore()
         .collection('threads')
@@ -28,6 +32,9 @@ export default {
         contributors: firebase.firestore.FieldValue.arrayUnion(
           rootState.auth.authId
         ),
+      })
+      batch.update(userRef, {
+        postsCount: firebase.firestore.FieldValue.increment(1),
       })
       await batch.commit()
       // Retrieve the current post for consistency and also to access the
