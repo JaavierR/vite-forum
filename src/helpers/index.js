@@ -39,3 +39,8 @@ export const makeAppendChildToParentMutation = ({ parent, child }) => {
     }
   }
 }
+
+export const docToResource = (doc) => {
+  if (typeof doc?.data !== 'function') return doc
+  return { ...doc.data(), id: doc.id }
+}

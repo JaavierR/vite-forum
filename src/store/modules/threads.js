@@ -1,5 +1,9 @@
 import firebase from 'firebase/app'
-import { findById, makeAppendChildToParentMutation } from '@/helpers'
+import {
+  docToResource,
+  findById,
+  makeAppendChildToParentMutation,
+} from '@/helpers'
 
 export default {
   namespaced: true,
@@ -43,10 +47,7 @@ export default {
       // Set thread in vuex
       commit(
         'SET_ITEM',
-        {
-          resource: 'threads',
-          item: { ...newThread.data(), id: newThread.id },
-        },
+        { resource: 'threads', item: newThread },
         { root: true }
       )
       commit(
@@ -71,17 +72,27 @@ export default {
     async updateThread({ commit, state, rootState }, { title, text, id }) {
       const thread = findById(state.threads, id)
       const post = findById(rootState.posts.posts, thread.posts[0])
-      const newThread = { ...thread, title }
-      const newPost = { ...post, text }
-
+      let newThread = { ...thread, title }
+      let newPost = { ...post, text }
+      // Firebase
+      const threadRef = firebase.firestore().collection('threads').doc(id)
+      const postRef = firebase.firestore().collection('posts').doc(post.id)
+      const batch = firebase.firestore().batch()
+      // Write to the db
+      batch.update(threadRef, newThread)
+      batch.update(postRef, newPost)
+      await batch.commit()
+      // Fetch the current update data
+      newThread = await threadRef.get()
+      newPost = await postRef.get()
+      // Set data to vuex
       commit(
         'SET_ITEM',
         { resource: 'threads', item: newThread },
         { root: true }
       )
       commit('SET_ITEM', { resource: 'posts', item: newPost }, { root: true })
-
-      return newThread
+      return docToResource(newThread)
     },
     // * dispatch by default return a Promise so there are no need to wrap
     // * dispatch in a Promise.

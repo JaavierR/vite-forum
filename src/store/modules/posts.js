@@ -40,11 +40,7 @@ export default {
       // Retrieve the current post for consistency and also to access the
       // timestamp from the server.
       const newPost = await postRef.get()
-      commit(
-        'SET_ITEM',
-        { resource: 'posts', item: { ...newPost.data(), id: newPost.id } },
-        { root: true }
-      )
+      commit('SET_ITEM', { resource: 'posts', item: newPost }, { root: true })
       commit(
         'threads/APPEND_POST_TO_THREAD',
         {
