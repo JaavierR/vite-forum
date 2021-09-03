@@ -29,6 +29,9 @@
             {{ post.text }}
           </p>
         </div>
+        <a href="#" class="pl-4 ml-auto link-unstyled">
+          <fa icon="pencil-alt" />
+        </a>
       </div>
 
       <div class="post-date text-faded">
