@@ -10,6 +10,9 @@
     "format": "prettier .  --write"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "dayjs": "^1.10.6",
     "firebase": "8.10.0",
     "vue": "^3.2.8",
