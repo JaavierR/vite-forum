@@ -8,10 +8,10 @@
           cols="30"
           rows="10"
           class="form-input"
-          v-model="text"
+          v-model="postCopy.text"
         />
         <div class="form-actions">
-          <button class="btn-blue">Submit post</button>
+          <button class="btn-blue">{{ buttonLabel }}</button>
         </div>
       </div>
     </form>
@@ -19,23 +19,29 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 /*eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }]*/
 
 export default {
-  setup(_, { emit }) {
-    const text = ref('')
+  props: {
+    post: {
+      type: Object,
+      default: () => ({ text: null }),
+    },
+  },
+  setup(props, { emit }) {
+    const postCopy = ref({ ...props.post })
+    const buttonLabel = computed(() =>
+      postCopy.value.id ? 'Update Post' : 'Submit Post'
+    )
 
     const save = () => {
-      const post = {
-        text: text.value,
-      }
-      emit('save', { post }) // Can access under eventData.post
+      emit('save', { post: postCopy.value }) // Can access under eventData.post
 
-      text.value = ''
+      postCopy.value.text = ''
     }
 
-    return { text, save }
+    return { postCopy, buttonLabel, save }
   },
 }
 </script>

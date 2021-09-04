@@ -24,12 +24,17 @@
       </div>
 
       <div class="post-content">
-        <div>
-          <p>
+        <div class="col-full">
+          <PostEditor v-if="editing === post.id" :post="post" />
+          <p v-else>
             {{ post.text }}
           </p>
         </div>
-        <a href="#" class="pl-4 ml-auto link-unstyled">
+        <a
+          @click.prevent="toggleEditMode(post.id)"
+          href="#"
+          class="pl-4 ml-auto link-unstyled"
+        >
           <fa icon="pencil-alt" />
         </a>
       </div>
@@ -42,9 +47,12 @@
 </template>
 
 <script>
+import { ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import PostEditor from '@/components/PostEditor.vue'
 
 export default {
+  components: { PostEditor },
   props: {
     posts: {
       type: Array,
@@ -53,9 +61,14 @@ export default {
   },
   setup() {
     const store = useStore()
-    const userById = (userId) => store.getters['users/user'](userId)
+    const editing = ref(null)
 
-    return { userById }
+    const userById = (userId) => store.getters['users/user'](userId)
+    const toggleEditMode = (id) => {
+      editing.value = id === editing.value ? null : id
+    }
+
+    return { editing, userById, toggleEditMode }
   },
 }
 </script>
