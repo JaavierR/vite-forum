@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 
 import actions from '@/store/actions'
 import mutations from '@/store/mutations'
+import state from '@/store/state'
 
 import auth from './modules/auth'
 import categories from './modules/categories'
@@ -19,6 +20,7 @@ const store = createStore({
     users,
     threads,
   },
+  state,
   actions,
   mutations,
 })
