@@ -25,12 +25,17 @@
 
       <div class="post-content">
         <div class="col-full">
-          <PostEditor v-if="editing === post.id" :post="post" />
+          <PostEditor
+            v-if="editing === post.id"
+            :post="post"
+            @save="updatePost"
+          />
           <p v-else>
             {{ post.text }}
           </p>
         </div>
         <a
+          v-if="post.userId === authUserId"
           @click.prevent="toggleEditMode(post.id)"
           href="#"
           class="pl-4 ml-auto link-unstyled"
@@ -40,6 +45,7 @@
       </div>
 
       <div class="post-date text-faded">
+        <div v-if="post.edited?.at" class="edition-info">edited</div>
         <app-date :timestamp="post.publishedAt" />
       </div>
     </div>
@@ -47,7 +53,7 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import PostEditor from '@/components/PostEditor.vue'
 
@@ -62,13 +68,18 @@ export default {
   setup() {
     const store = useStore()
     const editing = ref(null)
+    const authUserId = computed(() => store.getters['auth/authUser'].id)
 
     const userById = (userId) => store.getters['users/user'](userId)
     const toggleEditMode = (id) => {
       editing.value = id === editing.value ? null : id
     }
+    const updatePost = (event) => {
+      store.dispatch('posts/updatePost', event.post)
+      editing.value = null
+    }
 
-    return { editing, userById, toggleEditMode }
+    return { authUserId, editing, userById, toggleEditMode, updatePost }
   },
 }
 </script>

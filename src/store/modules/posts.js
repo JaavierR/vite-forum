@@ -55,6 +55,27 @@ export default {
         { root: true }
       )
     },
+    async updatePost({ commit, rootState }, { text, id }) {
+      console.log(text, id)
+      const post = {
+        text,
+        edited: {
+          at: firebase.firestore.FieldValue.serverTimestamp(),
+          by: rootState.auth.authId,
+          moderated: false,
+        },
+      }
+      // Write in db
+      const postRef = firebase.firestore().collection('posts').doc(id)
+      await postRef.update(post)
+      // Fetch the current data
+      const updatedPost = await postRef.get()
+      commit(
+        'SET_ITEM',
+        { resource: 'posts', item: updatedPost },
+        { root: true }
+      )
+    },
     fetchPost: ({ dispatch }, { id }) =>
       dispatch(
         'fetchItem',
