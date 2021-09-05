@@ -64,8 +64,13 @@
 
 <script>
 import { reactive } from '@vue/reactivity'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 export default {
   setup(_, { emit }) {
+    const store = useStore()
+    const router = useRouter()
     const form = reactive({
       name: '',
       username: '',
@@ -76,8 +81,9 @@ export default {
 
     emit('ready')
 
-    const register = () => {
-      console.log('Submiting the form: ', form)
+    const register = async () => {
+      await store.dispatch('users/createUser', form)
+      router.push('/')
     }
 
     return { form, register }

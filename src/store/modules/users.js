@@ -1,4 +1,9 @@
-import { findById, makeAppendChildToParentMutation } from '@/helpers'
+import firebase from 'firebase/app'
+import {
+  docToResource,
+  findById,
+  makeAppendChildToParentMutation,
+} from '@/helpers'
 
 export default {
   namespaced: true,
@@ -12,6 +17,26 @@ export default {
     }),
   },
   actions: {
+    async createUser({ commit }, { email, name, username, avatar = null }) {
+      const registeredAt = firebase.firestore.FieldValue.serverTimestamp()
+      const usernameLower = username.toLowerCase()
+      email = email.toLowerCase()
+      const user = {
+        email,
+        name,
+        username,
+        usernameLower,
+        avatar,
+        registeredAt,
+      }
+      // Write to firebase
+      const userRef = firebase.firestore().collection('users').doc()
+      await userRef.set(user)
+      // Retrieve the generated user
+      const newUser = await userRef.get()
+      commit('SET_ITEM', { resource: 'users', item: newUser })
+      return docToResource(newUser)
+    },
     updateUser({ commit }, user) {
       commit('SET_ITEM', { resource: 'users', item: user }, { root: true })
     },
