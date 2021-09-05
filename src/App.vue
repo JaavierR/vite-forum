@@ -9,7 +9,6 @@
 <script>
 import NProgress from 'nprogress'
 import { ref } from '@vue/reactivity'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 import TheNavbar from './components/TheNavbar.vue'
@@ -17,7 +16,6 @@ import TheNavbar from './components/TheNavbar.vue'
 export default {
   components: { TheNavbar },
   setup() {
-    const store = useStore()
     const showPage = ref(false)
     const router = useRouter()
 
@@ -26,7 +24,6 @@ export default {
       NProgress.done()
     }
 
-    store.dispatch('auth/fetchAuthUser')
     NProgress.configure({
       speed: 200,
       showSpinner: false,
