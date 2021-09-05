@@ -7,7 +7,8 @@
 
 <script>
 export default {
-  setup() {
+  setup(_, { emit }) {
+    emit('ready')
     return {}
   },
 }
