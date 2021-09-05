@@ -37,6 +37,15 @@
             </ul>
           </div>
         </li>
+        <li v-if="authUser" class="navbar-item">
+          <a @click.prevent="signOut">Sign Out</a>
+        </li>
+        <li v-if="!authUser" class="navbar-item">
+          <RouterLink :to="{ name: 'Login' }">Login</RouterLink>
+        </li>
+        <li v-if="!authUser" class="navbar-item">
+          <RouterLink :to="{ name: 'Register' }">Register</RouterLink>
+        </li>
       </ul>
 
       <!-- <ul>
@@ -54,8 +63,12 @@ export default {
   setup() {
     const store = useStore()
     const authUser = computed(() => store.getters['auth/authUser'])
+    const signOut = () => {
+      store.dispatch('auth/signOut')
+    }
     return {
       authUser,
+      signOut,
     }
   },
 }

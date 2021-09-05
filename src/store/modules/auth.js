@@ -22,6 +22,13 @@ export default {
         { root: true }
       )
     },
+    signInWithEmailAndPassword(_, { email, password }) {
+      return firebase.auth().signInWithEmailAndPassword(email, password)
+    },
+    async signOut({ commit }) {
+      await firebase.auth().signOut()
+      commit('SET_AUTH_ID', null)
+    },
     fetchAuthUser: ({ state, dispatch, commit }) => {
       const userId = firebase.auth().currentUser?.uid
       if (!userId) return
