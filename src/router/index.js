@@ -11,6 +11,7 @@ import ThreadShow from '@/views/ThreadShow.vue'
 import ThreadCreate from '@/views/ThreadCreate.vue'
 import ThreadEdit from '@/views/ThreadEdit.vue'
 import Profile from '@/views/Profile.vue'
+import Register from '@/views/Register.vue'
 import NotFound from '@/views/NotFound.vue'
 
 const routes = [
@@ -80,6 +81,11 @@ const routes = [
     name: 'ProfileEdit',
     component: Profile,
     props: { edit: true },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
   },
   {
     path: '/:pathMatch(.*)*',
