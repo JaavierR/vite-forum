@@ -9,6 +9,8 @@
       :text="text"
       @save="save"
       @cancel="cancel"
+      @clean="formIsDirty = false"
+      @dirty="formIsDirty = true"
     />
   </div>
 </template>
@@ -16,7 +18,7 @@
 <script>
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import useDataStatus from '@/composables/useDataStatus'
 import { findById } from '@/helpers'
 
@@ -36,6 +38,7 @@ export default {
     const store = useStore()
     const router = useRouter()
     const id = ref(props.id)
+    const formIsDirty = ref(false)
     const { ready, fetched } = useDataStatus()
 
     const fetchThread = async (id) => {
@@ -68,7 +71,17 @@ export default {
       router.push({ name: 'ThreadShow', params: { id: id.value } })
     }
 
+    onBeforeRouteLeave(() => {
+      if (formIsDirty.value) {
+        const confirmed = window.confirm(
+          'Are you sure you want to leave? Unsaved changes will be lost!'
+        )
+        if (!confirmed) return false
+      }
+    })
+
     return {
+      formIsDirty,
       ready,
       thread,
       text,

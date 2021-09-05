@@ -36,6 +36,7 @@
 
 <script>
 import { computed, reactive, toRefs } from '@vue/reactivity'
+import { watch } from '@vue/runtime-core'
 
 export default {
   props: {
@@ -55,8 +56,21 @@ export default {
     const saveButtonText = computed(() => (title.value ? 'Update' : 'Publish'))
 
     const save = () => {
+      emit('clean')
       emit('save', { ...form })
     }
+
+    watch(
+      form,
+      () => {
+        if (form.title !== title.value || form.text !== text.value) {
+          emit('dirty')
+        } else {
+          emit('clean')
+        }
+      },
+      { deep: true }
+    )
 
     return { form, save, saveButtonText }
   },

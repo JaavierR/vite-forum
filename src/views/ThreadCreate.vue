@@ -4,14 +4,19 @@
       Create a new thread in <i>{{ forum.name }}</i>
     </h1>
 
-    <ThreadEditor @save="save" @cancel="cancel" />
+    <ThreadEditor
+      @save="save"
+      @cancel="cancel"
+      @clean="formIsDirty = false"
+      @dirty="formIsDirty = true"
+    />
   </div>
 </template>
 
 <script>
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import useDataStatus from '@/composables/useDataStatus'
 import { findById } from '@/helpers'
 
@@ -31,6 +36,7 @@ export default {
     const store = useStore()
     const router = useRouter()
     const forumId = ref(props.forumId)
+    const formIsDirty = ref(false)
     const { ready, fetched } = useDataStatus()
 
     const fecthForum = async () => {
@@ -57,9 +63,19 @@ export default {
       router.push({ name: 'Forum', params: { id: forum.value.id } })
     }
 
+    onBeforeRouteLeave(() => {
+      if (formIsDirty.value) {
+        const confirmed = window.confirm(
+          'Are you sure you want to leave? Unsaved changes will be lost!'
+        )
+        if (!confirmed) return false
+      }
+    })
+
     return {
       ready,
       forum,
+      formIsDirty,
 
       save,
       cancel,

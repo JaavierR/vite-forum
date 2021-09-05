@@ -1,7 +1,7 @@
 <template>
   <div class="flex-grid">
-    <div class="col-3 push-top">
-      <!-- User profile cards -->
+    <h1>My Profile</h1>
+    <!-- <div class="col-3 push-top">
       <UserProfileCard v-if="!edit" :user="user" />
       <UserProfileCardEditor v-else :user="user" />
     </div>
@@ -15,33 +15,40 @@
       <hr />
 
       <PostList :posts="user.posts" />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import { computed } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import store from '@/store'
 
-import PostList from '@/components/PostList.vue'
-import UserProfileCard from '@/components/UserProfileCard.vue'
-import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue'
+// import PostList from '@/components/PostList.vue'
+// import UserProfileCard from '@/components/UserProfileCard.vue'
+// import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue'
 
 export default {
-  components: { PostList, UserProfileCard, UserProfileCardEditor },
+  // components: { PostList, UserProfileCard, UserProfileCardEditor },
   props: {
     edit: {
       type: Boolean,
       default: false,
     },
   },
-  setup() {
+  setup(_, { emit }) {
+    emit('ready')
     const store = useStore()
     const user = computed(() => store.getters['auth/authUser'])
+    // onBeforeRouteEnter not exists, one implementation is directly in the
+    // router file, or maybe check inside the setup method.
 
     return {
       user,
     }
+  },
+  beforeRouteEnter() {
+    if (!store.state.auth.authId) return { name: 'Home' }
   },
 }
 </script>
