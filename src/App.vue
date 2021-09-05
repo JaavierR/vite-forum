@@ -1,12 +1,13 @@
 <template>
   <TheNavbar />
   <div class="container">
-    <RouterView v-show="showPage" @ready="showPage = true" />
-    <div v-show="!showPage" class="push-top">loading...</div>
+    <RouterView v-show="showPage" @ready="onPageReady" />
+    <AppSpinner v-show="!showPage" class="mt-14" />
   </div>
 </template>
 
 <script>
+import NProgress from 'nprogress'
 import { ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -20,14 +21,24 @@ export default {
     const showPage = ref(false)
     const router = useRouter()
 
-    store.dispatch('auth/fetchAuthUser')
+    const onPageReady = () => {
+      showPage.value = true
+      NProgress.done()
+    }
 
+    store.dispatch('auth/fetchAuthUser')
+    NProgress.configure({
+      speed: 200,
+      showSpinner: false,
+    })
     router.beforeEach(() => {
       showPage.value = false
+      NProgress.start()
     })
 
     return {
       showPage,
+      onPageReady,
     }
   },
 }
@@ -35,4 +46,8 @@ export default {
 
 <style>
 @import 'assets/style.css';
+@import 'nprogress/nprogress.css';
+#nprogress .bar {
+  background: #57ad8d !important;
+}
 </style>
