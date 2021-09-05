@@ -7,7 +7,7 @@
         <div>
           <p>
             <!-- Add typeof verification 'cause on load this break the component (vue-router) if is undefined -->
-            <router-link
+            <RouterLink
               v-if="typeof thread.id !== 'undefined'"
               :to="{
                 name: 'ThreadShow',
@@ -15,12 +15,12 @@
               }"
             >
               {{ thread.title }}
-            </router-link>
+            </RouterLink>
           </p>
 
           <p>
             By <a href="#">{{ userById(thread.userId).name }}</a
-            >, <app-date :timestamp="thread.publishedAt" />.
+            >, <AppDate :timestamp="thread.publishedAt" />.
           </p>
         </div>
 
@@ -38,7 +38,7 @@
               <a href="#">{{ userById(thread.userId).name }}</a>
             </p>
             <p class="text-xsmall text-faded">
-              <app-date :timestamp="thread.publishedAt" />
+              <AppDate :timestamp="thread.publishedAt" />
             </p>
           </div>
         </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="text-center col-full">
     <h1>Not Found</h1>
-    <router-link :to="{ name: 'Home' }">Read some cool threads.</router-link>
+    <RouterLink :to="{ name: 'Home' }">Read some cool threads.</RouterLink>
   </div>
 </template>
 

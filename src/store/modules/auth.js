@@ -8,11 +8,7 @@ export default {
     fetchAuthUser: ({ state, dispatch }) =>
       dispatch(
         'fetchItem',
-        {
-          id: state.authId,
-          emoji: '🔑',
-          resource: 'users',
-        },
+        { resource: 'users', id: state.authId, emoji: '🔑' },
         { root: true }
       ),
   },

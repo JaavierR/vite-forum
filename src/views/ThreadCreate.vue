@@ -4,7 +4,7 @@
       Create a new thread in <i>{{ forum.name }}</i>
     </h1>
 
-    <thread-editor @save="save" @cancel="cancel" />
+    <ThreadEditor @save="save" @cancel="cancel" />
   </div>
 </template>
 

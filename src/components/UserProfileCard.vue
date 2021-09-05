@@ -39,9 +39,9 @@
 
     <div class="text-center">
       <hr />
-      <router-link :to="{ name: 'ProfileEdit' }" class="btn-green btn-small"
-        >Edit Profile</router-link
-      >
+      <RouterLink :to="{ name: 'ProfileEdit' }" class="btn-green btn-small">
+        Edit Profile
+      </RouterLink>
     </div>
   </div>
 </template>

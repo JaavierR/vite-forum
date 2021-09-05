@@ -2,8 +2,8 @@
   <div class="flex-grid">
     <div class="col-3 push-top">
       <!-- User profile cards -->
-      <user-profile-card v-if="!edit" :user="user" />
-      <user-profile-card-editor v-else :user="user" />
+      <UserProfileCard v-if="!edit" :user="user" />
+      <UserProfileCardEditor v-else :user="user" />
     </div>
 
     <div class="col-7 push-top">
@@ -14,7 +14,7 @@
 
       <hr />
 
-      <post-list :posts="user.posts" />
+      <PostList :posts="user.posts" />
     </div>
   </div>
 </template>

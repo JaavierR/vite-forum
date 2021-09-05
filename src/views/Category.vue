@@ -1,6 +1,6 @@
 <template>
   <h1 class="text-3xl font-bold">{{ category.name }}</h1>
-  <forum-list :title="category.name" :forums="getForumsForCategory(category)" />
+  <ForumList :title="category.name" :forums="getForumsForCategory(category)" />
 </template>
 
 <script>

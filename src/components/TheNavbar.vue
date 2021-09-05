@@ -1,8 +1,8 @@
 <template>
   <header class="header" id="header">
-    <router-link :to="{ name: 'Home' }" class="logo">
+    <RouterLink :to="{ name: 'Home' }" class="logo">
       <img src="@/assets/svg/vueschool-logo.svg" alt="" />
-    </router-link>
+    </RouterLink>
 
     <div class="btn-hamburger">
       <div class="top bar"></div>
@@ -13,7 +13,7 @@
     <nav class="navbar">
       <ul>
         <li v-if="authUser" class="navbar-user">
-          <router-link :to="{ name: 'Profile' }">
+          <RouterLink :to="{ name: 'Profile' }">
             <img
               class="avatar-small"
               :src="authUser.avatar"
@@ -27,7 +27,7 @@
                 alt=""
               />
             </span>
-          </router-link>
+          </RouterLink>
 
           <div id="user-dropdown">
             <div class="triangle-drop"></div>
@@ -54,7 +54,6 @@ export default {
   setup() {
     const store = useStore()
     const authUser = computed(() => store.getters['auth/authUser'])
-
     return {
       authUser,
     }

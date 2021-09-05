@@ -2,26 +2,26 @@
   <div v-if="thread" class="col-large push-top">
     <h1 class="my-4 text-3xl font-medium">
       {{ thread.title }}
-      <router-link
+      <RouterLink
         :to="{ name: 'ThreadEdit', id }"
         class="btn-green btn-small"
         tag="button"
       >
         Edit Thread
-      </router-link>
+      </RouterLink>
     </h1>
 
     <p>
       By <a href="#" class="link-unstyled">{{ thread.author?.name }}</a
-      >, <app-date :timestamp="thread.publishedAt" />.
+      >, <AppDate :timestamp="thread.publishedAt" />.
       <span class="mt-[2px] hide-mobile text-faded text-small float-right"
         >{{ thread.repliesCount }} replies by
         {{ thread.contributorsCount }} contributors</span
       >
     </p>
 
-    <post-list :posts="threadPosts" />
-    <post-editor @save="addPost" />
+    <PostList :posts="threadPosts" />
+    <PostEditor @save="addPost" />
   </div>
 </template>
 
@@ -32,13 +32,11 @@ import useThread from '@/composables/useThread.js'
 
 import PostList from '@/components/PostList.vue'
 import PostEditor from '@/components/PostEditor.vue'
-import AppDate from '@/components/AppDate.vue'
 
 export default {
   components: {
     PostList,
     PostEditor,
-    AppDate,
   },
   props: {
     id: {
