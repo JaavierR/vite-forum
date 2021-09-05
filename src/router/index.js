@@ -74,6 +74,9 @@ const routes = [
     name: 'Profile',
     component: Profile,
     meta: { toTop: true, smoothScroll: true },
+    beforeEnter() {
+      if (!store.state.auth.authId) return { name: 'Home' }
+    },
   },
   // When we define a route, we can define components props
   //  by passing an object to the props option.
@@ -87,6 +90,14 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    async beforeEnter() {
+      await store.dispatch('auth/signOut')
+      return { name: 'Home' }
+    },
   },
   {
     path: '/register',

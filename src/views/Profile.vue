@@ -22,7 +22,6 @@
 <script>
 import { computed } from '@vue/reactivity'
 import { useStore } from 'vuex'
-import store from '@/store'
 
 // import PostList from '@/components/PostList.vue'
 // import UserProfileCard from '@/components/UserProfileCard.vue'
@@ -46,9 +45,6 @@ export default {
     return {
       user,
     }
-  },
-  beforeRouteEnter() {
-    if (!store.state.auth.authId) return { name: 'Home' }
   },
 }
 </script>
