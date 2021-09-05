@@ -1,6 +1,6 @@
 // Imports
 const firestoreService = require('firestore-export-import')
-const firebaseConfig = require('./src/config/firebase.js')
+const firebaseConfig = require('./src/config/firebaseModule.js')
 const serviceAccount = require('./serviceAccount.json')
 const fs = require('fs')
 const tempFileName = `${__dirname}/data-temp.json`
