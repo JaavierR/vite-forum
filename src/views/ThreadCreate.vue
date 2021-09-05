@@ -1,5 +1,5 @@
 <template>
-  <div v-if="forum" class="col-full push-top">
+  <div v-if="ready" class="col-full push-top">
     <h1>
       Create a new thread in <i>{{ forum.name }}</i>
     </h1>
@@ -12,6 +12,7 @@
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import useDataStatus from '@/composables/useDataStatus'
 import { findById } from '@/helpers'
 
 import ThreadEditor from '@/components/ThreadEditor.vue'
@@ -30,8 +31,14 @@ export default {
     const store = useStore()
     const router = useRouter()
     const forumId = ref(props.forumId)
+    const { ready, fetched } = useDataStatus()
 
-    store.dispatch('forums/fetchForum', { id: forumId.value })
+    const fecthForum = async () => {
+      await store.dispatch('forums/fetchForum', { id: forumId.value })
+      fetched()
+    }
+
+    fecthForum()
 
     const forum = computed(() =>
       findById(store.state.forums.forums, forumId.value)
@@ -51,6 +58,7 @@ export default {
     }
 
     return {
+      ready,
       forum,
 
       save,

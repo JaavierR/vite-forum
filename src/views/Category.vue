@@ -1,11 +1,17 @@
 <template>
-  <h1 class="text-3xl font-bold">{{ category.name }}</h1>
-  <ForumList :title="category.name" :forums="getForumsForCategory(category)" />
+  <div v-if="ready" class="container">
+    <h1 class="text-3xl font-bold">{{ category.name }}</h1>
+    <ForumList
+      :title="category.name"
+      :forums="getForumsForCategory(category)"
+    />
+  </div>
 </template>
 
 <script>
 import { computed, toRefs } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import useDataStatus from '@/composables/useDataStatus'
 import { findById } from '@/helpers'
 
 import ForumList from '@/components/ForumList.vue'
@@ -21,10 +27,12 @@ export default {
   setup(props) {
     const store = useStore()
     const { id } = toRefs(props)
+    const { ready, fetched } = useDataStatus()
 
     const fecthCategory = async (id) => {
       const category = await store.dispatch('categories/fetchCategory', { id })
-      store.dispatch('forums/fetchForums', { ids: category.forums })
+      await store.dispatch('forums/fetchForums', { ids: category.forums })
+      fetched()
     }
 
     fecthCategory(id.value)
@@ -39,6 +47,7 @@ export default {
       forums.value.filter((forum) => forum.categoryId === category.id)
 
     return {
+      ready,
       category,
       getForumsForCategory,
     }

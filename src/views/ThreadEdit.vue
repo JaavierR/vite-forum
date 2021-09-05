@@ -1,5 +1,5 @@
 <template>
-  <div v-if="thread && text" class="col-full push-top">
+  <div v-if="ready" class="col-full push-top">
     <h1>
       Editing <i>{{ thread.title }}</i>
     </h1>
@@ -17,6 +17,7 @@
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import useDataStatus from '@/composables/useDataStatus'
 import { findById } from '@/helpers'
 
 import ThreadEditor from '@/components/ThreadEditor.vue'
@@ -35,10 +36,12 @@ export default {
     const store = useStore()
     const router = useRouter()
     const id = ref(props.id)
+    const { ready, fetched } = useDataStatus()
 
     const fetchThread = async (id) => {
       const thread = await store.dispatch('threads/fetchThread', { id })
-      store.dispatch('posts/fetchPost', { id: thread.posts[0] })
+      await store.dispatch('posts/fetchPost', { id: thread.posts[0] })
+      fetched()
     }
 
     fetchThread(id.value)
@@ -66,6 +69,7 @@ export default {
     }
 
     return {
+      ready,
       thread,
       text,
 

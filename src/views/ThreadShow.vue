@@ -1,5 +1,5 @@
 <template>
-  <div v-if="thread" class="col-large push-top">
+  <div v-if="ready" class="col-large push-top">
     <h1 class="my-4 text-3xl font-medium">
       {{ thread.title }}
       <RouterLink
@@ -28,7 +28,7 @@
 <script>
 import { computed, toRefs } from 'vue'
 import { useStore } from 'vuex'
-import useThread from '@/composables/useThread.js'
+import useDataStatus from '@/composables/useDataStatus'
 
 import PostList from '@/components/PostList.vue'
 import PostEditor from '@/components/PostEditor.vue'
@@ -47,7 +47,23 @@ export default {
   setup(props) {
     const store = useStore()
     const { id } = toRefs(props)
-    const { fetchThread } = useThread()
+    const { ready, fetched } = useDataStatus()
+
+    const fetchThread = async (id) => {
+      // fetch the thread
+      const thread = await store.dispatch('threads/fetchThread', { id })
+
+      // fetch the posts
+      const posts = await store.dispatch('posts/fetchPosts', {
+        ids: thread.posts,
+      })
+
+      // fetch the users associated with the posts
+      const users = posts.map((post) => post.userId)
+      await store.dispatch('users/fetchUsers', { ids: users })
+
+      fetched()
+    }
 
     fetchThread(id.value)
 
@@ -70,6 +86,7 @@ export default {
     }
 
     return {
+      ready,
       // Computed
       thread,
       threadPosts,
