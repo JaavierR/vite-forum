@@ -1,5 +1,4 @@
 import firebase from 'firebase/app'
-import 'firebase/firestore'
 
 export default {
   fetchItem({ commit }, { id, emoji, resource }) {
