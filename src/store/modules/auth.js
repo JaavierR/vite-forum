@@ -4,9 +4,11 @@ import 'firebase/auth'
 export default {
   namespaced: true,
   state: {
-    authId: 'VXjpr2WHa8Ux4Bnggym8QFLdv5C3',
+    authId: null,
   },
-  mutations: {},
+  mutations: {
+    SET_AUTH_ID: (state, id) => (state.authId = id),
+  },
   actions: {
     async registerUserWithEmailAndPassword(
       { dispatch },
@@ -21,12 +23,16 @@ export default {
         { root: true }
       )
     },
-    fetchAuthUser: ({ state, dispatch }) =>
+    fetchAuthUser: ({ state, dispatch, commit }) => {
+      const userId = firebase.auth().currentUser?.uid
+      if (!userId) return
+      commit('SET_AUTH_ID', userId)
       dispatch(
         'fetchItem',
         { resource: 'users', id: state.authId, emoji: '🔑' },
         { root: true }
-      ),
+      )
+    },
   },
   getters: {
     authUser: (state, _getters, _rootState, rootGetters) =>
