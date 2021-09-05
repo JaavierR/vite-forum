@@ -1,7 +1,7 @@
 import firebase from 'firebase/app'
 
 export default {
-  fetchItem({ commit }, { id, emoji, resource }) {
+  fetchItem({ commit }, { id, emoji, resource, handleUnsubscribe = null }) {
     console.log('🔥', emoji, id)
     return new Promise((resolve) => {
       const unsubscribe = firebase
@@ -13,7 +13,12 @@ export default {
           commit('SET_ITEM', { resource, item })
           resolve(item)
         })
-      commit('APPEND_UNSUBSCRIBE', { unsubscribe })
+
+      if (handleUnsubscribe) {
+        handleUnsubscribe(unsubscribe)
+      } else {
+        commit('APPEND_UNSUBSCRIBE', { unsubscribe })
+      }
     })
   },
   fetchItems({ dispatch }, { ids, resource, emoji }) {

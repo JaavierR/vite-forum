@@ -12,6 +12,7 @@ import '@/index.css'
 
 firebase.initializeApp(firebaseConfig)
 firebase.auth().onAuthStateChanged((user) => {
+  store.dispatch('auth/unsubscribeAuthUserSnapshot')
   if (user) {
     store.dispatch('auth/fetchAuthUser')
   }

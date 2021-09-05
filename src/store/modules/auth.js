@@ -4,9 +4,15 @@ export default {
   namespaced: true,
   state: {
     authId: null,
+    authUserUnsubscribe: null,
   },
   mutations: {
-    SET_AUTH_ID: (state, id) => (state.authId = id),
+    SET_AUTH_ID(state, id) {
+      state.authId = id
+    },
+    SET_AUTH_USER_UNSUBSCRIBE(state, unsubscribe) {
+      state.authUserUnsubscribe = unsubscribe
+    },
   },
   actions: {
     async registerUserWithEmailAndPassword(
@@ -54,9 +60,22 @@ export default {
       commit('SET_AUTH_ID', userId)
       dispatch(
         'fetchItem',
-        { resource: 'users', id: state.authId, emoji: '🔑' },
+        {
+          resource: 'users',
+          id: state.authId,
+          emoji: '🔑',
+          handleUnsubscribe: (unsubscribe) => {
+            commit('SET_AUTH_USER_UNSUBSCRIBE', unsubscribe)
+          },
+        },
         { root: true }
       )
+    },
+    async unsubscribeAuthUserSnapshot({ state, commit }) {
+      if (state.authUserUnsubscribe) {
+        state.authUserUnsubscribe()
+        commit('SET_AUTH_USER_UNSUBSCRIBE', null)
+      }
     },
   },
   getters: {

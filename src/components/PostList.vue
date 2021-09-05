@@ -68,7 +68,7 @@ export default {
   setup() {
     const store = useStore()
     const editing = ref(null)
-    const authUserId = computed(() => store.getters['auth/authUser'].id)
+    const authUserId = computed(() => store.getters['auth/authUser']?.id)
 
     const userById = (userId) => store.getters['users/user'](userId)
     const toggleEditMode = (id) => {
