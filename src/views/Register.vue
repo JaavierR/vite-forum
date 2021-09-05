@@ -82,7 +82,7 @@ export default {
     emit('ready')
 
     const register = async () => {
-      await store.dispatch('users/createUser', form)
+      store.dispatch('auth/registerUserWithEmailAndPassword', form)
       router.push('/')
     }
 

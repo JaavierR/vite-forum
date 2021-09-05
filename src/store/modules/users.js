@@ -17,7 +17,7 @@ export default {
     }),
   },
   actions: {
-    async createUser({ commit }, { email, name, username, avatar = null }) {
+    async createUser({ commit }, { id, email, name, username, avatar = null }) {
       const registeredAt = firebase.firestore.FieldValue.serverTimestamp()
       const usernameLower = username.toLowerCase()
       email = email.toLowerCase()
@@ -30,11 +30,11 @@ export default {
         registeredAt,
       }
       // Write to firebase
-      const userRef = firebase.firestore().collection('users').doc()
+      const userRef = firebase.firestore().collection('users').doc(id)
       await userRef.set(user)
       // Retrieve the generated user
       const newUser = await userRef.get()
-      commit('SET_ITEM', { resource: 'users', item: newUser })
+      commit('SET_ITEM', { resource: 'users', item: newUser }, { root: true })
       return docToResource(newUser)
     },
     updateUser({ commit }, user) {

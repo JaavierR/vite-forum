@@ -1,3 +1,6 @@
+import firebase from 'firebase/app'
+import 'firebase/auth'
+
 export default {
   namespaced: true,
   state: {
@@ -5,6 +8,19 @@ export default {
   },
   mutations: {},
   actions: {
+    async registerUserWithEmailAndPassword(
+      { dispatch },
+      { name, email, password, username, avatar = null }
+    ) {
+      const { user } = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+      await dispatch(
+        'users/createUser',
+        { id: user.uid, email, name, username, avatar },
+        { root: true }
+      )
+    },
     fetchAuthUser: ({ state, dispatch }) =>
       dispatch(
         'fetchItem',
