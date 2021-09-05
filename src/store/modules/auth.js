@@ -29,6 +29,25 @@ export default {
       await firebase.auth().signOut()
       commit('SET_AUTH_ID', null)
     },
+    async signInWithGoogle({ dispatch }) {
+      const provider = new firebase.auth.GoogleAuthProvider()
+      const { user } = await firebase.auth().signInWithPopup(provider)
+      const userRef = firebase.firestore().collection('users').doc(user.uid)
+      const userDoc = await userRef.get()
+      if (!userDoc.exists) {
+        return dispatch(
+          'users/createUser',
+          {
+            id: user.uid,
+            name: user.displayName,
+            email: user.email,
+            username: user.email,
+            avatar: user.photoURL,
+          },
+          { root: true }
+        )
+      }
+    },
     fetchAuthUser: ({ state, dispatch, commit }) => {
       const userId = firebase.auth().currentUser?.uid
       if (!userId) return

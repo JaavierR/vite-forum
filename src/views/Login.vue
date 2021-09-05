@@ -33,8 +33,9 @@
       </form>
 
       <div class="text-center push-top">
-        <button class="btn-red btn-xsmall">
-          <i class="fa fa-google fa-btn"></i>Sign in with Google
+        <button @click.prevent="signInWithGoogle" class="btn-red btn-xsmall">
+          <i class="fa fa-google fa-btn"></i>
+          Sign in with Google
         </button>
       </div>
     </div>
@@ -65,7 +66,12 @@ export default {
       }
     }
 
-    return { form, login }
+    const signInWithGoogle = async () => {
+      await store.dispatch('auth/signInWithGoogle')
+      router.push('/')
+    }
+
+    return { form, login, signInWithGoogle }
   },
 }
 </script>

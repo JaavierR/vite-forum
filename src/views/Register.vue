@@ -54,7 +54,7 @@
         </div>
       </form>
       <div class="text-center push-top">
-        <button class="btn-red btn-xsmall">
+        <button @click.prevent="registerWithGoogle" class="btn-red btn-xsmall">
           <i class="fa fa-google fa-btn"></i>Sign up with Google
         </button>
       </div>
@@ -86,7 +86,12 @@ export default {
       router.push('/')
     }
 
-    return { form, register }
+    const registerWithGoogle = async () => {
+      await store.dispatch('auth/signInWithGoogle')
+      router.push('/')
+    }
+
+    return { form, register, registerWithGoogle }
   },
 }
 </script>
