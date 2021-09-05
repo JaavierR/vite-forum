@@ -13,7 +13,7 @@
     <nav class="navbar">
       <ul>
         <li v-if="authUser" class="navbar-user">
-          <RouterLink :to="{ name: 'Profile' }">
+          <a @click.prevent="userDropdownOpen = !userDropdownOpen">
             <img
               class="avatar-small"
               :src="authUser.avatar"
@@ -27,19 +27,21 @@
                 alt=""
               />
             </span>
-          </RouterLink>
+          </a>
 
-          <div id="user-dropdown">
+          <div id="user-dropdown" :class="{ 'active-drop': userDropdownOpen }">
             <div class="triangle-drop"></div>
             <ul class="dropdown-menu">
-              <li class="dropdown-menu-item"><a href="#">View Profile</a></li>
-              <li class="dropdown-menu-item"><a href="#">Log out</a></li>
+              <li class="dropdown-menu-item">
+                <RouterLink :to="{ name: 'Profile' }">View Profile</RouterLink>
+              </li>
+              <li class="dropdown-menu-item">
+                <a @click.prevent="signOut">Sign Out</a>
+              </li>
             </ul>
           </div>
         </li>
-        <li v-if="authUser" class="navbar-item">
-          <a @click.prevent="signOut">Sign Out</a>
-        </li>
+
         <li v-if="!authUser" class="navbar-item">
           <RouterLink :to="{ name: 'Login' }">Login</RouterLink>
         </li>
@@ -56,17 +58,22 @@
 </template>
 
 <script>
-import { computed } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 
 export default {
   setup() {
     const store = useStore()
+    const userDropdownOpen = ref(false)
+
     const authUser = computed(() => store.getters['auth/authUser'])
+
     const signOut = () => {
       store.dispatch('auth/signOut')
     }
+
     return {
+      userDropdownOpen,
       authUser,
       signOut,
     }
