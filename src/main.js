@@ -7,6 +7,7 @@ import firebaseConfig from '@/config/firebase'
 import router from '@/router'
 import store from '@/store'
 import FontAwesome from '@/plugins/FontAwesome'
+import ClickOutsideDirective from '@/plugins/ClickOutsideDirective'
 // Tailwind styles
 import '@/index.css'
 
@@ -16,6 +17,7 @@ const forumApp = createApp(App)
 forumApp.use(router)
 forumApp.use(store)
 forumApp.use(FontAwesome)
+forumApp.use(ClickOutsideDirective)
 
 // Import global components in the vite way.
 const requireComponent = import.meta.globEager('./components/App*.vue')
