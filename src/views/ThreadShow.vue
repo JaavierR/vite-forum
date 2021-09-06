@@ -3,6 +3,7 @@
     <h1 class="my-4 text-3xl font-medium">
       {{ thread.title }}
       <RouterLink
+        v-if="thread.userId === authUser?.id"
         :to="{ name: 'ThreadEdit', id }"
         class="btn-green btn-small"
         tag="button"
@@ -21,7 +22,19 @@
     </p>
 
     <PostList :posts="threadPosts" />
-    <PostEditor @save="addPost" />
+    <PostEditor v-if="authUser" @save="addPost" />
+    <div v-else class="text-center" style="margin-bottom: 50px">
+      <RouterLink :to="{ name: 'Login', query: { redirectTo: $route.path } }">
+        Sign In
+      </RouterLink>
+      or
+      <RouterLink
+        :to="{ name: 'Register', query: { redirectTo: $route.path } }"
+      >
+        Register
+      </RouterLink>
+      to reply.
+    </div>
   </div>
 </template>
 
@@ -48,6 +61,8 @@ export default {
     const store = useStore()
     const { id } = toRefs(props)
     const { ready, fetched } = useDataStatus()
+
+    const authUser = computed(() => store.getters['auth/authUser'])
 
     const fetchThread = async (id) => {
       // fetch the thread
@@ -88,6 +103,7 @@ export default {
     return {
       ready,
       // Computed
+      authUser,
       thread,
       threadPosts,
 
