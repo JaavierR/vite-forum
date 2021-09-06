@@ -1,7 +1,6 @@
 <template>
-  <div class="flex-grid">
-    <h1>My Profile</h1>
-    <!-- <div class="col-3 push-top">
+  <div v-if="ready" class="flex-grid">
+    <div class="col-3 push-top">
       <UserProfileCard v-if="!edit" :user="user" />
       <UserProfileCardEditor v-else :user="user" />
     </div>
@@ -15,7 +14,7 @@
       <hr />
 
       <PostList :posts="user.posts" />
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -23,26 +22,35 @@
 import { computed } from '@vue/reactivity'
 import { useStore } from 'vuex'
 
-// import PostList from '@/components/PostList.vue'
-// import UserProfileCard from '@/components/UserProfileCard.vue'
-// import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue'
+import useDataStatus from '@/composables/useDataStatus'
+
+import PostList from '@/components/PostList.vue'
+import UserProfileCard from '@/components/UserProfileCard.vue'
+import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue'
 
 export default {
-  // components: { PostList, UserProfileCard, UserProfileCardEditor },
+  components: { PostList, UserProfileCard, UserProfileCardEditor },
   props: {
     edit: {
       type: Boolean,
       default: false,
     },
   },
-  setup(_, { emit }) {
-    emit('ready')
+  setup() {
     const store = useStore()
     const user = computed(() => store.getters['auth/authUser'])
+    const { ready, fetched } = useDataStatus()
     // onBeforeRouteEnter not exists, one implementation is directly in the
     // router file, or maybe check inside the setup method.
+    const fetchAuthUserPosts = async () => {
+      await store.dispatch('auth/fetchAuthUserPosts')
+      fetched()
+    }
+
+    fetchAuthUserPosts()
 
     return {
+      ready,
       user,
     }
   },
