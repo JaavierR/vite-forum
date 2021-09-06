@@ -1,4 +1,5 @@
 import firebase from 'firebase/app'
+import { makeFetchItemAction, makeFetchItemsAction } from '@/helpers'
 
 export default {
   namespaced: true,
@@ -56,7 +57,6 @@ export default {
       )
     },
     async updatePost({ commit, rootState }, { text, id }) {
-      console.log(text, id)
       const post = {
         text,
         edited: {
@@ -76,22 +76,8 @@ export default {
         { root: true }
       )
     },
-    fetchPost: ({ dispatch }, { id }) =>
-      dispatch(
-        'fetchItem',
-        { resource: 'posts', id, emoji: '💬' },
-        { root: true }
-      ),
-    fetchPosts: ({ dispatch }, { ids }) =>
-      dispatch(
-        'fetchItems',
-        {
-          ids,
-          emoji: '💬',
-          resource: 'posts',
-        },
-        { root: true }
-      ),
+    fetchPost: makeFetchItemAction({ resource: 'posts', emoji: '💬' }),
+    fetchPosts: makeFetchItemsAction({ resource: 'posts', emoji: '💬' }),
   },
   getters: {},
 }

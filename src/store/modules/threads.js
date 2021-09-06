@@ -4,6 +4,8 @@ import {
   docToResource,
   findById,
   makeAppendChildToParentMutation,
+  makeFetchItemAction,
+  makeFetchItemsAction,
 } from '@/helpers'
 
 export default {
@@ -100,22 +102,8 @@ export default {
     },
     // * dispatch by default return a Promise so there are no need to wrap
     // * dispatch in a Promise.
-    fetchThread: ({ dispatch }, { id }) =>
-      dispatch(
-        'fetchItem',
-        { resource: 'threads', id, emoji: '📄' },
-        { root: true }
-      ),
-    fetchThreads: ({ dispatch }, { ids }) =>
-      dispatch(
-        'fetchItems',
-        {
-          ids,
-          emoji: '📄',
-          resource: 'threads',
-        },
-        { root: true }
-      ),
+    fetchThread: makeFetchItemAction({ resource: 'threads', emoji: '📄' }),
+    fetchThreads: makeFetchItemsAction({ resource: 'threads', emoji: '📄' }),
     fetchThreadsByPage: ({ commit, dispatch }, { ids, page, perPage = 10 }) => {
       commit('CLEAR_THREADS')
       const chunks = chunk(ids, perPage)

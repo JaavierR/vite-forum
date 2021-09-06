@@ -3,6 +3,8 @@ import {
   docToResource,
   findById,
   makeAppendChildToParentMutation,
+  makeFetchItemAction,
+  makeFetchItemsAction,
 } from '@/helpers'
 
 export default {
@@ -52,22 +54,8 @@ export default {
       await userRef.update(updates)
       commit('SET_ITEM', { resource: 'users', item: user }, { root: true })
     },
-    fetchUser: ({ dispatch }, { id }) =>
-      dispatch(
-        'fetchItem',
-        { resource: 'users', id, emoji: '🙋🏽‍♂️' },
-        { root: true }
-      ),
-    fetchUsers: ({ dispatch }, { ids }) =>
-      dispatch(
-        'fetchItems',
-        {
-          ids,
-          emoji: '🙋🏽‍♂️',
-          resource: 'users',
-        },
-        { root: true }
-      ),
+    fetchUser: makeFetchItemAction({ resource: 'users', emoji: '🙋🏽‍♂️' }),
+    fetchUsers: makeFetchItemsAction({ resource: 'users', emoji: '🙋🏽‍♂️' }),
   },
   getters: {
     user: (state, _, rootState) => {
