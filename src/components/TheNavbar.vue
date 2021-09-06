@@ -1,16 +1,20 @@
 <template>
-  <header class="header" id="header">
+  <header
+    class="header"
+    id="header"
+    v-click-outside="() => (mobileNavMenu = false)"
+  >
     <RouterLink :to="{ name: 'Home' }" class="logo">
       <img src="@/assets/svg/vueschool-logo.svg" alt="" />
     </RouterLink>
 
-    <div class="btn-hamburger">
+    <div class="btn-hamburger" @click="mobileNavMenu = !mobileNavMenu">
       <div class="top bar"></div>
       <div class="middle bar"></div>
       <div class="bottom bar"></div>
     </div>
 
-    <nav class="navbar">
+    <nav class="navbar" :class="{ 'navbar-open': mobileNavMenu }">
       <ul>
         <li v-if="authUser" class="navbar-user">
           <a
@@ -51,6 +55,12 @@
         <li v-if="!authUser" class="navbar-item">
           <RouterLink :to="{ name: 'Register' }">Register</RouterLink>
         </li>
+        <li v-if="authUser" class="navbar-mobile-item">
+          <RouterLink :to="{ name: 'Profile' }">View Profile</RouterLink>
+        </li>
+        <li v-if="authUser" class="navbar-mobile-item">
+          <a @click.prevent="signOut">Sign Out</a>
+        </li>
       </ul>
 
       <!-- <ul>
@@ -63,20 +73,31 @@
 <script>
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default {
   setup() {
     const store = useStore()
+    const router = useRouter()
     const userDropdownOpen = ref(false)
+    const mobileNavMenu = ref(false)
+
+    router.beforeEach(() => {
+      mobileNavMenu.value = false
+    })
 
     const authUser = computed(() => store.getters['auth/authUser'])
 
     const signOut = () => {
       store.dispatch('auth/signOut')
+      mobileNavMenu.value = false
+      router.push({ name: 'Home' })
     }
 
     return {
       userDropdownOpen,
+      mobileNavMenu,
+
       authUser,
       signOut,
     }
