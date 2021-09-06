@@ -1,4 +1,5 @@
 import firebase from 'firebase/app'
+import chunk from 'lodash/chunk'
 import {
   docToResource,
   findById,
@@ -19,6 +20,9 @@ export default {
       parent: 'threads',
       child: 'contributors',
     }),
+    CLEAR_THREADS(state) {
+      state.threads = []
+    },
   },
   actions: {
     async createThread(
@@ -112,6 +116,12 @@ export default {
         },
         { root: true }
       ),
+    fetchThreadsByPage: ({ commit, dispatch }, { ids, page, perPage = 10 }) => {
+      commit('CLEAR_THREADS')
+      const chunks = chunk(ids, perPage)
+      const limitedIds = chunks[page - 1]
+      return dispatch('fetchThreads', { ids: limitedIds })
+    },
   },
   getters: {
     thread: (state, _, rootState) => {

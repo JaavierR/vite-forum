@@ -15,12 +15,14 @@
     </div>
     <div class="col-full push-top">
       <ThreadList v-if="threads.length" :threads="threads" />
+      <VPagination v-model="page" :pages="totalPages" active-color="#57AD8D" />
     </div>
   </div>
 </template>
 
 <script>
-import { computed, toRefs } from '@vue/reactivity'
+import { computed, ref, toRefs } from '@vue/reactivity'
+import { watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import useDataStatus from '@/composables/useDataStatus'
 import { findById } from '@/helpers'
@@ -39,11 +41,15 @@ export default {
     const store = useStore()
     const { id } = toRefs(props)
     const { ready, fetched } = useDataStatus()
+    const page = ref(1)
+    const perPage = ref(10)
 
     const fetchForum = async (id) => {
       const forum = await store.dispatch('forums/fetchForum', { id })
-      const threads = await store.dispatch('threads/fetchThreads', {
+      const threads = await store.dispatch('threads/fetchThreadsByPage', {
         ids: forum.threads,
+        page: page.value,
+        perPage: perPage.value,
       })
 
       await store.dispatch('users/fetchUsers', {
@@ -56,15 +62,33 @@ export default {
     fetchForum(id.value)
 
     const forum = computed(() => findById(store.state.forums.forums, id.value))
-
     const threads = computed(() => {
       if (!forum.value) return []
-      return forum.value.threads.map((threadId) =>
-        store.getters['threads/thread'](threadId)
-      )
+      return store.state.threads.threads
+        .filter((thread) => thread.forumId === forum.value.id)
+        .map((thread) => store.getters['threads/thread'](thread.id))
     })
 
-    return { ready, forum, threads }
+    const threadCount = computed(() => forum.value.threads.length)
+
+    const totalPages = computed(() => {
+      if (!threadCount.value) return 0
+      return Math.ceil(threadCount.value / perPage.value)
+    })
+
+    watch(page, async (page) => {
+      const threads = await store.dispatch('threads/fetchThreadsByPage', {
+        ids: forum.value.threads,
+        page: page,
+        perPage: perPage.value,
+      })
+
+      await store.dispatch('users/fetchUsers', {
+        ids: threads.map((thread) => thread.userId),
+      })
+    })
+
+    return { page, totalPages, ready, forum, threads }
   },
 }
 </script>
