@@ -90,6 +90,7 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: { requiresGuest: true },
   },
   {
     path: '/logout',
@@ -103,6 +104,7 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register,
+    meta: { requiresGuest: true },
   },
   {
     path: '/:pathMatch(.*)*',
@@ -129,7 +131,13 @@ router.beforeEach(async (to, from) => {
   console.log(`🚦 navigating to ${to.name} from ${from.name}`)
   store.dispatch('unsubscribeAllSnapshots')
 
-  if (to.meta.requiresAuth && !store.state.auth.authId) {
+  const authId = store.state.auth.authId
+
+  if (to.meta.requiresAuth && !authId) {
+    return { name: 'Login' }
+  }
+
+  if (to.meta.requiresGuest && authId) {
     return { name: 'Home' }
   }
 })
