@@ -102,6 +102,8 @@ export default {
         .firestore()
         .collection('posts')
         .where('userId', '==', state.authId)
+        .orderBy('publishedAt', 'desc')
+        .limit(10)
         .get()
 
       posts.forEach((item) => {
