@@ -24,8 +24,9 @@
 import { computed, ref, toRefs } from '@vue/reactivity'
 import { watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
-import useDataStatus from '@/composables/useDataStatus'
+import { useRoute, useRouter } from 'vue-router'
 import { findById } from '@/helpers'
+import useDataStatus from '@/composables/useDataStatus'
 
 import ThreadList from '@/components/ThreadList.vue'
 
@@ -39,9 +40,11 @@ export default {
   },
   setup(props) {
     const store = useStore()
+    const route = useRoute()
+    const router = useRouter()
     const { id } = toRefs(props)
     const { ready, fetched } = useDataStatus()
-    const page = ref(1)
+    const page = route.query.page ? ref(parseInt(route.query.page)) : ref(1)
     const perPage = ref(10)
 
     const fetchForum = async (id) => {
@@ -76,16 +79,8 @@ export default {
       return Math.ceil(threadCount.value / perPage.value)
     })
 
-    watch(page, async (page) => {
-      const threads = await store.dispatch('threads/fetchThreadsByPage', {
-        ids: forum.value.threads,
-        page: page,
-        perPage: perPage.value,
-      })
-
-      await store.dispatch('users/fetchUsers', {
-        ids: threads.map((thread) => thread.userId),
-      })
+    watch(page, (page) => {
+      router.push({ query: { page: page } })
     })
 
     return { page, totalPages, ready, forum, threads }
