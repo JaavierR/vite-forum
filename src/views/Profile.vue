@@ -39,11 +39,17 @@ export default {
   setup() {
     const store = useStore()
     const user = computed(() => store.getters['auth/authUser'])
+    const lastPostFetched = computed(() => {
+      if (user.value.posts.length === 0) return null
+      return user.value.posts[user.value.posts.length - 1]
+    })
     const { ready, fetched } = useDataStatus()
     // onBeforeRouteEnter not exists, one implementation is directly in the
     // router file, or maybe check inside the setup method.
     const fetchAuthUserPosts = async () => {
-      await store.dispatch('auth/fetchAuthUserPosts')
+      await store.dispatch('auth/fetchAuthUserPosts', {
+        startAfter: lastPostFetched.value,
+      })
       fetched()
     }
 

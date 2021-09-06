@@ -97,14 +97,24 @@ export default {
         commit('SET_AUTH_USER_UNSUBSCRIBE', null)
       }
     },
-    async fetchAuthUserPosts({ state, commit }) {
-      const posts = await firebase
+    async fetchAuthUserPosts({ state, commit }, { startAfter }) {
+      let query = firebase
         .firestore()
         .collection('posts')
         .where('userId', '==', state.authId)
         .orderBy('publishedAt', 'desc')
         .limit(10)
-        .get()
+
+      if (startAfter) {
+        const doc = await firebase
+          .firestore()
+          .collection('posts')
+          .doc(startAfter.id)
+          .get()
+        query = query.startAfter(doc)
+      }
+
+      const posts = await query.get()
 
       posts.forEach((item) => {
         commit('SET_ITEM', { resource: 'posts', item }, { root: true })
