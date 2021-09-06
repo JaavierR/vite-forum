@@ -16,6 +16,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-4",
     "dayjs": "^1.10.6",
     "firebase": "8.10.0",
+    "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "vue": "^3.2.8",
     "vue-router": "4",
