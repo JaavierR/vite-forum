@@ -14,6 +14,10 @@
       <hr />
 
       <PostList :posts="user.posts" />
+      <AppInfiniteScroll
+        @load="fetchUserPosts"
+        :done="user.posts.length === user.postsCount"
+      />
     </div>
   </div>
 </template>
@@ -46,10 +50,13 @@ export default {
     const { ready, fetched } = useDataStatus()
     // onBeforeRouteEnter not exists, one implementation is directly in the
     // router file, or maybe check inside the setup method.
-    const fetchAuthUserPosts = async () => {
-      await store.dispatch('auth/fetchAuthUserPosts', {
+    const fetchUserPosts = () => {
+      return store.dispatch('auth/fetchAuthUserPosts', {
         startAfter: lastPostFetched.value,
       })
+    }
+    const fetchAuthUserPosts = async () => {
+      await fetchUserPosts()
       fetched()
     }
 
@@ -58,6 +65,8 @@ export default {
     return {
       ready,
       user,
+
+      fetchUserPosts,
     }
   },
 }
