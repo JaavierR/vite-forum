@@ -5,6 +5,7 @@ export default {
   state: {
     authId: null,
     authUserUnsubscribe: null,
+    authObserverUnsubscribe: null,
   },
   mutations: {
     SET_AUTH_ID(state, id) {
@@ -13,8 +14,27 @@ export default {
     SET_AUTH_USER_UNSUBSCRIBE(state, unsubscribe) {
       state.authUserUnsubscribe = unsubscribe
     },
+    SET_AUTH_OBSERVER_UNSUBSCRIBE(state, unsubscribe) {
+      state.authObserverUnsubscribe = unsubscribe
+    },
   },
   actions: {
+    initAuthentication({ dispatch, commit, state }) {
+      if (state.authObserverUnsubscribe) state.authObserverUnsubscribe()
+      return new Promise((resolve) => {
+        const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+          console.log('👣 the user has changed')
+          dispatch('unsubscribeAuthUserSnapshot')
+          if (user) {
+            await dispatch('fetchAuthUser')
+            resolve(user)
+          } else {
+            resolve(null)
+          }
+        })
+        commit('SET_AUTH_OBSERVER_UNSUBSCRIBE', unsubscribe)
+      })
+    },
     async registerUserWithEmailAndPassword(
       { dispatch },
       { name, email, password, username, avatar = null }
@@ -54,15 +74,14 @@ export default {
         )
       }
     },
-    fetchAuthUser: ({ state, dispatch, commit }) => {
+    fetchAuthUser: async ({ dispatch, commit }) => {
       const userId = firebase.auth().currentUser?.uid
       if (!userId) return
-      commit('SET_AUTH_ID', userId)
-      dispatch(
+      await dispatch(
         'fetchItem',
         {
           resource: 'users',
-          id: state.authId,
+          id: userId,
           emoji: '🔑',
           handleUnsubscribe: (unsubscribe) => {
             commit('SET_AUTH_USER_UNSUBSCRIBE', unsubscribe)
@@ -70,6 +89,7 @@ export default {
         },
         { root: true }
       )
+      commit('SET_AUTH_ID', userId)
     },
     async unsubscribeAuthUserSnapshot({ state, commit }) {
       if (state.authUserUnsubscribe) {

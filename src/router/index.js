@@ -121,11 +121,12 @@ const router = createRouter({
   },
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach(async (to, from) => {
+  await store.dispatch('auth/initAuthentication')
   console.log(`🚦 navigating to ${to.name} from ${from.name}`)
   store.dispatch('unsubscribeAllSnapshots')
 
-  if (to.meta.requiresAuth && !store.state.auth.authID) {
+  if (to.meta.requiresAuth && !store.state.auth.authId) {
     return { name: 'Home' }
   }
 })
