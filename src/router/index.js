@@ -134,7 +134,7 @@ router.beforeEach(async (to, from) => {
   const authId = store.state.auth.authId
 
   if (to.meta.requiresAuth && !authId) {
-    return { name: 'Login' }
+    return { name: 'Login', query: { redirectTo: to.path } }
   }
 
   if (to.meta.requiresGuest && authId) {

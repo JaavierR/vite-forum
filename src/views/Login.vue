@@ -45,22 +45,29 @@
 <script>
 import { reactive } from '@vue/reactivity'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   setup(_, { emit }) {
     emit('ready')
     const store = useStore()
     const router = useRouter()
+    const route = useRoute()
+
     const form = reactive({
       email: '',
       password: '',
     })
 
+    const successRedirect = () => {
+      const redirectTo = route.query.redirectTo || { name: 'Home' }
+      router.push(redirectTo)
+    }
+
     const login = async () => {
       try {
         await store.dispatch('auth/signInWithEmailAndPassword', { ...form })
-        router.push('/')
+        successRedirect()
       } catch (error) {
         alert(error.message)
       }
@@ -68,7 +75,7 @@ export default {
 
     const signInWithGoogle = async () => {
       await store.dispatch('auth/signInWithGoogle')
-      router.push('/')
+      successRedirect()
     }
 
     return { form, login, signInWithGoogle }
