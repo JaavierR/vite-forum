@@ -70,7 +70,18 @@ export default {
 
     const fetchPostsWithUsers = async (ids) => {
       // fetch the posts
-      const posts = await store.dispatch('posts/fetchPosts', { ids })
+      const posts = await store.dispatch('posts/fetchPosts', {
+        ids,
+        onSnapshot: ({ isLocal, previousItem }) => {
+          if (
+            !ready.value ||
+            isLocal ||
+            (previousItem?.edited && !previousItem?.edited?.at)
+          )
+            return
+          addNotification({ message: 'Thread recently updated' })
+        },
+      })
 
       // fetch the users associated with the posts
       const users = posts.map((post) => post.userId).concat(thread.value.userId)
@@ -81,11 +92,15 @@ export default {
       // fetch the thread
       const thread = await store.dispatch('threads/fetchThread', {
         id,
-        onSnapshot: ({ isLocal, item, previousItem }) => {
+        onSnapshot: async ({ isLocal, item, previousItem }) => {
           if (!ready.value || isLocal) return
-          const newPostIds = difference(item.posts, previousItem.posts)
-          fetchPostsWithUsers(newPostIds)
-          addNotification({ message: 'Thread recently updated' })
+          const newPosts = difference(item.posts, previousItem.posts)
+          const hasNewPosts = newPosts.length > 0
+          if (hasNewPosts) {
+            await fetchPostsWithUsers(newPosts)
+          } else {
+            addNotification({ message: 'Thread recently updated' })
+          }
         },
       })
       await fetchPostsWithUsers(thread.posts)
