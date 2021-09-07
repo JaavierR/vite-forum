@@ -42,6 +42,16 @@ export default {
       const { user } = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
+      // Upload avatar to firestore storage
+      if (avatar) {
+        const storageBucket = firebase
+          .storage()
+          .ref()
+          .child(`uploads/${user.uid}/images/${Date.now()}-${avatar.name}`)
+        const snapshot = await storageBucket.put(avatar)
+        avatar = await snapshot.ref.getDownloadURL()
+      }
+      // Register and create the user in the firebase
       await dispatch(
         'users/createUser',
         { id: user.uid, email, name, username, avatar },
