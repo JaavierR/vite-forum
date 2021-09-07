@@ -1,13 +1,17 @@
 <template>
   <div class="profile-card">
     <form @submit.prevent="save">
-      <p class="text-center">
+      <p class="text-center avatar-edit">
         <label for="avatar" class="avatar">
           <img
-            :src="user.avatar"
+            :src="activeUser.avatar"
             :alt="`${user.name} profile picture`"
             class="mx-auto avatar-xlarge img-update"
           />
+          <div class="avatar-upload-overlay">
+            <AppSpinner v-if="uploadingImage" color="white" />
+            <fa v-else icon="camera" size="3x" class="text-white opacity-80" />
+          </div>
           <input
             v-show="false"
             type="file"
@@ -96,7 +100,7 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity'
+import { reactive, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 export default {
@@ -109,6 +113,7 @@ export default {
   setup(props) {
     const store = useStore()
     const router = useRouter()
+    const uploadingImage = ref(false)
 
     // * We use reactive to maintain reactivy in the object,
     // also the dot operator allow us to clone the object and prevent
@@ -125,10 +130,12 @@ export default {
     }
 
     const handleAvatarUpload = async (e) => {
+      uploadingImage.value = true
       const file = e.target.files[0]
       activeUser.avatar = await store.dispatch('auth/uploadAvatar', {
         file,
       })
+      uploadingImage.value = false
     }
 
     const cancel = () => {
@@ -137,6 +144,7 @@ export default {
 
     return {
       activeUser,
+      uploadingImage,
 
       save,
       cancel,

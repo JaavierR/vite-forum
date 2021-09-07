@@ -9,6 +9,19 @@
   </div>
 </template>
 
+<script>
+import { ref } from '@vue/reactivity'
+export default {
+  props: {
+    color: { type: String, default: '#263959' },
+  },
+  setup(props) {
+    const spinnerColor = ref(props.color)
+    return { spinnerColor }
+  },
+}
+</script>
+
 <style scoped>
 .sk-chase {
   width: 40px;
@@ -31,7 +44,7 @@
   display: block;
   width: 25%;
   height: 25%;
-  background-color: #263959;
+  background-color: v-bind(spinnerColor);
   border-radius: 100%;
   animation: sk-chase-dot-before 2s infinite ease-in-out both;
 }
