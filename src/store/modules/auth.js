@@ -43,20 +43,27 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(email, password)
       // Upload avatar to firestore storage
-      if (avatar) {
-        const storageBucket = firebase
-          .storage()
-          .ref()
-          .child(`uploads/${user.uid}/images/${Date.now()}-${avatar.name}`)
-        const snapshot = await storageBucket.put(avatar)
-        avatar = await snapshot.ref.getDownloadURL()
-      }
+      avatar = await dispatch('uploadAvatar', {
+        authId: user.uid,
+        file: avatar,
+      })
       // Register and create the user in the firebase
       await dispatch(
         'users/createUser',
         { id: user.uid, email, name, username, avatar },
         { root: true }
       )
+    },
+    async uploadAvatar({ state }, { authId, file }) {
+      if (!file) return null
+      authId = authId || state.authId
+      const storageBucket = firebase
+        .storage()
+        .ref()
+        .child(`uploads/${authId}/images/${Date.now()}-${file.name}`)
+      const snapshot = await storageBucket.put(file)
+      const url = await snapshot.ref.getDownloadURL()
+      return url
     },
     signInWithEmailAndPassword(_, { email, password }) {
       return firebase.auth().signInWithEmailAndPassword(email, password)

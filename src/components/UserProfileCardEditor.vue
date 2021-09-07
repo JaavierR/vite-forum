@@ -2,11 +2,20 @@
   <div class="profile-card">
     <form @submit.prevent="save">
       <p class="text-center">
-        <img
-          :src="user.avatar"
-          :alt="`${user.name} profile picture`"
-          class="mx-auto avatar-xlarge img-update"
-        />
+        <label for="avatar" class="avatar">
+          <img
+            :src="user.avatar"
+            :alt="`${user.name} profile picture`"
+            class="mx-auto avatar-xlarge img-update"
+          />
+          <input
+            v-show="false"
+            type="file"
+            id="avatar"
+            accept="image/*"
+            @change="handleAvatarUpload"
+          />
+        </label>
       </p>
 
       <div class="form-group">
@@ -115,6 +124,13 @@ export default {
       router.push({ name: 'Profile' })
     }
 
+    const handleAvatarUpload = async (e) => {
+      const file = e.target.files[0]
+      activeUser.avatar = await store.dispatch('auth/uploadAvatar', {
+        file,
+      })
+    }
+
     const cancel = () => {
       router.push({ name: 'Profile' })
     }
@@ -124,6 +140,7 @@ export default {
 
       save,
       cancel,
+      handleAvatarUpload,
     }
   },
 }
