@@ -79,7 +79,7 @@ export default {
             (previousItem?.edited && !previousItem?.edited?.at)
           )
             return
-          addNotification({ message: 'Thread recently updated' })
+          addNotification({ message: 'Thread recently updated', timeout: 5000 })
         },
       })
 
@@ -99,7 +99,10 @@ export default {
           if (hasNewPosts) {
             await fetchPostsWithUsers(newPosts)
           } else {
-            addNotification({ message: 'Thread recently updated' })
+            addNotification({
+              message: 'Thread recently updated',
+              timeout: 5000,
+            })
           }
         },
       })
