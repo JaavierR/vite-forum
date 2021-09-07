@@ -41,7 +41,10 @@
 <script>
 import { computed, toRefs } from 'vue'
 import { useStore } from 'vuex'
+import difference from 'lodash/difference'
+
 import useDataStatus from '@/composables/useDataStatus'
+import useNotifications from '@/composables/useNotifications'
 
 import PostList from '@/components/PostList.vue'
 import PostEditor from '@/components/PostEditor.vue'
@@ -60,23 +63,32 @@ export default {
   setup(props) {
     const store = useStore()
     const { id } = toRefs(props)
+    const { addNotification } = useNotifications()
     const { ready, fetched } = useDataStatus()
 
     const authUser = computed(() => store.getters['auth/authUser'])
 
-    const fetchThread = async (id) => {
-      // fetch the thread
-      const thread = await store.dispatch('threads/fetchThread', { id })
-
+    const fetchPostsWithUsers = async (ids) => {
       // fetch the posts
-      const posts = await store.dispatch('posts/fetchPosts', {
-        ids: thread.posts,
-      })
+      const posts = await store.dispatch('posts/fetchPosts', { ids })
 
       // fetch the users associated with the posts
-      const users = posts.map((post) => post.userId)
+      const users = posts.map((post) => post.userId).concat(thread.value.userId)
       await store.dispatch('users/fetchUsers', { ids: users })
+    }
 
+    const fetchThread = async (id) => {
+      // fetch the thread
+      const thread = await store.dispatch('threads/fetchThread', {
+        id,
+        onSnapshot: ({ isLocal, item, previousItem }) => {
+          if (!ready.value || isLocal) return
+          const newPostIds = difference(item.posts, previousItem.posts)
+          fetchPostsWithUsers(newPostIds)
+          addNotification({ message: 'Thread recently updated' })
+        },
+      })
+      await fetchPostsWithUsers(thread.posts)
       fetched()
     }
 

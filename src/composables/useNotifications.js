@@ -1,9 +1,6 @@
 import { reactive } from 'vue'
 
-const notifications = reactive([
-  { id: 1, message: 'This is a test' },
-  { id: 2, message: 'This is a test2' },
-])
+const notifications = reactive([])
 
 const addNotification = (notification) => {
   notifications.push({
