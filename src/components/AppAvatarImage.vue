@@ -1,5 +1,5 @@
 <template>
-  <img :src="src || '/user-placeholder.png'" alt="" />
+  <img class="object-cover" :src="src || '/user-placeholder.png'" alt="" />
 </template>
 
 <script>

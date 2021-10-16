@@ -22,6 +22,8 @@
         </label>
       </p>
 
+      <UserProfileCardEditorRandomAvatar @hit="activeUser.avatar = $event" />
+
       <div class="form-group">
         <input
           v-model="activeUser.username"
@@ -103,6 +105,7 @@
 import { reactive, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import UserProfileCardEditorRandomAvatar from '@/components/UserProfileCardEditorRandomAvatar.vue'
 export default {
   props: {
     user: {
@@ -110,6 +113,7 @@ export default {
       required: true,
     },
   },
+  components: { UserProfileCardEditorRandomAvatar },
   setup(props) {
     const store = useStore()
     const router = useRouter()
