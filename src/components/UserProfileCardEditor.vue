@@ -124,15 +124,6 @@ export default {
     // making changes in the user of the vuex.
     const activeUser = reactive({ ...props.user })
 
-    const save = () => {
-      // Here we need to clone the object to avoid bound the activeUser object
-      // with the user inside the state in users module.
-
-      // * To set object's value to a variable, I should pass a cloned object instead.
-      store.dispatch('users/updateUser', { ...activeUser })
-      router.push({ name: 'Profile' })
-    }
-
     const handleAvatarUpload = async (e) => {
       uploadingImage.value = true
       const file = e.target.files[0]
@@ -141,6 +132,30 @@ export default {
       })
       activeUser.avatar = uploadedImage || activeUser.avatar
       uploadingImage.value = false
+    }
+
+    const handleRandomAvatarUpload = async () => {
+      const randomAvatarGenerated = activeUser.avatar.startsWith(
+        'https://pixabay'
+      )
+      if (randomAvatarGenerated) {
+        const image = await fetch(activeUser.avatar)
+        const blob = await image.blob()
+        activeUser.avatar = await store.dispatch('auth/uploadAvatar', {
+          file: blob,
+          filename: 'random',
+        })
+      }
+    }
+
+    const save = async () => {
+      // Here we need to clone the object to avoid bound the activeUser object
+      // with the user inside the state in users module.
+
+      // * To set object's value to a variable, I should pass a cloned object instead.
+      await handleRandomAvatarUpload()
+      store.dispatch('users/updateUser', { ...activeUser })
+      router.push({ name: 'Profile' })
     }
 
     const cancel = () => {
