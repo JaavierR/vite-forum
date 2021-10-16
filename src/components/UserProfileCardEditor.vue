@@ -3,10 +3,10 @@
     <form @submit.prevent="save">
       <p class="text-center avatar-edit">
         <label for="avatar" class="avatar">
-          <img
+          <AppAvatarImage
             :src="activeUser.avatar"
             :alt="`${user.name} profile picture`"
-            class="mx-auto avatar-xlarge img-update"
+            class="mx-auto mb-2 avatar-xlarge img-update"
           />
           <div class="avatar-upload-overlay">
             <AppSpinner v-if="uploadingImage" color="white" />

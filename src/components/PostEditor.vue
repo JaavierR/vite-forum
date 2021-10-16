@@ -20,7 +20,6 @@
 
 <script>
 import { computed, ref } from 'vue'
-/*eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }]*/
 
 export default {
   props: {

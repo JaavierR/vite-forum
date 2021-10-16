@@ -7,9 +7,8 @@
         </a>
 
         <a href="#">
-          <img
+          <AppAvatarImage
             :src="userById(post.userId).avatar"
-            alt=""
             class="avatar-large"
           />
         </a>
