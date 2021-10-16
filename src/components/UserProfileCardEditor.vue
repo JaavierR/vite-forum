@@ -132,9 +132,10 @@ export default {
     const handleAvatarUpload = async (e) => {
       uploadingImage.value = true
       const file = e.target.files[0]
-      activeUser.avatar = await store.dispatch('auth/uploadAvatar', {
+      const uploadedImage = await store.dispatch('auth/uploadAvatar', {
         file,
       })
+      activeUser.avatar = uploadedImage || activeUser.avatar
       uploadingImage.value = false
     }
 
