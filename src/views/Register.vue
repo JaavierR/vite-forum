@@ -48,6 +48,7 @@
           <VeeField
             name="password"
             v-model="form.password"
+            label="Password"
             id="password"
             type="password"
             class="form-input"
