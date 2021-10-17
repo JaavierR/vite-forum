@@ -12,7 +12,7 @@
             id="name"
             type="text"
             class="form-input"
-            :rules="required"
+            rules="required"
           />
           <VeeErrorMessage name="name" class="form-error" />
         </div>
@@ -25,7 +25,7 @@
             id="username"
             type="text"
             class="form-input"
-            :rules="required"
+            rules="required"
           />
           <VeeErrorMessage name="username" class="form-error" />
         </div>
@@ -88,14 +88,7 @@ import { ref, reactive } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 
-import { Form, Field, ErrorMessage } from 'vee-validate'
-
 export default {
-  components: {
-    VeeForm: Form,
-    VeeField: Field,
-    VeeErrorMessage: ErrorMessage,
-  },
   setup(_, { emit }) {
     emit('ready')
     const store = useStore()
@@ -110,11 +103,6 @@ export default {
       password: '',
       avatar: '',
     })
-
-    const required = (value) => {
-      if (value && value.trim()) return true
-      return 'This is required'
-    }
 
     const successRedirect = () => {
       const redirectTo = route.query.redirectTo || { name: 'Home' }
@@ -145,7 +133,6 @@ export default {
       avatarPreview,
       form,
       register,
-      required,
       registerWithGoogle,
       handleImageUpload,
     }

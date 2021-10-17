@@ -665,6 +665,11 @@
     "@types/mime" "^1"
     "@types/node" "*"
 
+"@vee-validate/rules@^4.5.3":
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/@vee-validate/rules/-/rules-4.5.3.tgz#26c4e5398063145260786c7f0e94cafc6724c829"
+  integrity sha512-sPc0mLeTXxkzbS5BAZmJSUi++BtAwvGtxTTLaWQO4XdGpzDGC6GHeSqf/U8oisY7g08t/mLu+GzKtNkUphmShQ==
+
 "@vitejs/plugin-vue@^1.9.3":
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-1.9.3.tgz#93d61893ce6c723d0209af0483ec8b91a2cd811f"
