@@ -665,6 +665,11 @@
     "@types/mime" "^1"
     "@types/node" "*"
 
+"@vee-validate/i18n@^4.5.3":
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/@vee-validate/i18n/-/i18n-4.5.3.tgz#8fc3ed3e28eb6841e9427b387f5aa0356e0a6337"
+  integrity sha512-uzgIwWyzKfxQ4d19qoAZBgy7vNV1OyLdYorAcz7yIaUWyJ/L72IMJ0nqTLqTfa+Fgi6FVEIfIEAtMuCzyhIPzA==
+
 "@vee-validate/rules@^4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@vee-validate/rules/-/rules-4.5.3.tgz#26c4e5398063145260786c7f0e94cafc6724c829"
