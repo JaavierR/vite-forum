@@ -72,7 +72,17 @@
         label="Location"
         name="location"
         v-model="activeUser.location"
+        list="locations"
+        @mouseenter="loadLocationOptions"
       />
+
+      <datalist id="locations">
+        <option
+          v-for="location in locationOptions"
+          :key="location.name.common"
+          :value="location.name.common"
+        />
+      </datalist>
 
       <div class="btn-group space-between">
         <button class="btn-ghost" @click.prevent="cancel">Cancel</button>
@@ -99,6 +109,7 @@ export default {
     const store = useStore()
     const router = useRouter()
     const uploadingImage = ref(false)
+    const locationOptions = ref([])
 
     // * We use reactive to maintain reactivy in the object,
     // also the dot operator allow us to clone the object and prevent
@@ -129,6 +140,12 @@ export default {
       }
     }
 
+    const loadLocationOptions = async () => {
+      if (locationOptions.value.length) return
+      const res = await fetch('https://restcountries.com/v3.1/all')
+      locationOptions.value = await res.json()
+    }
+
     const save = async () => {
       // Here we need to clone the object to avoid bound the activeUser object
       // with the user inside the state in users module.
@@ -144,12 +161,14 @@ export default {
     }
 
     return {
+      locationOptions,
       activeUser,
       uploadingImage,
 
       save,
       cancel,
       handleAvatarUpload,
+      loadLocationOptions,
     }
   },
 }
