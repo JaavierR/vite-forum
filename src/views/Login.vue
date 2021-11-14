@@ -1,33 +1,24 @@
 <template>
   <div class="justify-center flex-grid">
     <div class="col-2">
-      <VeeForm @submit.prevent="login" class="card card-form">
+      <VeeForm @submit="login" class="card card-form">
         <h1 class="text-center">Login</h1>
 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <VeeField
-            name="email"
-            rules="required"
-            v-model="form.email"
-            id="email"
-            type="text"
-            class="form-input"
-          />
-          <VeeErrorMessage name="email" class="form-error" />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <VeeField
-            name="password"
-            rules="required"
-            v-model="form.password"
-            id="password"
-            type="password"
-            class="form-input"
-          />
-          <VeeErrorMessage name="password" class="form-error" />
-        </div>
+        <AppFormField
+          v-model="form.email"
+          name="email"
+          label="Email"
+          rules="required|email"
+          type="email"
+        />
+
+        <AppFormField
+          v-model="form.password"
+          name="password"
+          label="Password"
+          rules="required"
+          type="password"
+        />
 
         <div class="push-top">
           <button type="submit" class="btn-blue btn-block">Log in</button>

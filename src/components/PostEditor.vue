@@ -1,20 +1,20 @@
 <template>
   <div class="col-full">
-    <form @submit.prevent="save">
+    <VeeForm @submit="save" :key="formKey">
       <div class="form-group">
-        <textarea
-          name=""
-          id=""
-          cols="30"
-          rows="10"
-          class="form-input"
+        <AppFormField
+          as="textarea"
+          name="text"
           v-model="postCopy.text"
+          rows="10"
+          cols="30"
+          rules="required"
         />
         <div class="form-actions">
           <button class="btn-blue">{{ buttonLabel }}</button>
         </div>
       </div>
-    </form>
+    </VeeForm>
   </div>
 </template>
 
@@ -29,6 +29,7 @@ export default {
     },
   },
   setup(props, { emit }) {
+    const formKey = ref(Math.random())
     const postCopy = ref({ ...props.post })
     const buttonLabel = computed(() =>
       postCopy.value.id ? 'Update Post' : 'Submit Post'
@@ -38,9 +39,10 @@ export default {
       emit('save', { post: postCopy.value }) // Can access under eventData.post
 
       postCopy.value.text = ''
+      formKey.value = Math.random()
     }
 
-    return { postCopy, buttonLabel, save }
+    return { formKey, postCopy, buttonLabel, save }
   },
 }
 </script>
