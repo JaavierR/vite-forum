@@ -5,10 +5,16 @@
       <RouterLink
         v-if="thread.userId === authUser?.id"
         :to="{ name: 'ThreadEdit', id }"
-        class="btn-green btn-small"
-        tag="button"
+        custom
+        v-slot="{ navigate }"
       >
-        Edit Thread
+        <button
+          class="btn-green btn-small"
+          @click="navigate"
+          @keypress.enter="navigate"
+        >
+          Edit Thread
+        </button>
       </RouterLink>
     </h1>
 
